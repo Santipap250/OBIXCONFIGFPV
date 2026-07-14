@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="98" y1="84" x2="415" y2="414" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67E8F9"/>
+      <stop offset="0.5" stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#F472B6"/>
+    </linearGradient>
+    <filter id="blur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#050816"/>
+  <circle cx="256" cy="256" r="176" fill="url(#g)" opacity="0.16" filter="url(#blur)"/>
+  <rect x="116" y="116" width="280" height="280" rx="92" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+  <path d="M256 118C180 118 118 180 118 256C118 332 180 394 256 394C332 394 394 332 394 256C394 180 332 118 256 118ZM256 160C309 160 352 203 352 256C352 309 309 352 256 352C203 352 160 309 160 256C160 203 203 160 256 160Z" fill="url(#g)"/>
+  <circle cx="256" cy="256" r="32" fill="#FFFFFF"/>
+  <path d="M256 180L276 246H332L286 280L304 346L256 307L208 346L226 280L180 246H236L256 180Z" fill="#FFFFFF" opacity="0.92"/>
+</svg>

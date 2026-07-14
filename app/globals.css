@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #05070a;
+  --bg-panel: #0a0f0d;
+  --line: rgba(124, 255, 178, 0.14);
+  --line-strong: rgba(124, 255, 178, 0.3);
+  --phosphor: #7cffb2;
+  --phosphor-dim: #4d9a71;
+  --amber: #ffb454;
+  --text: #eafbf1;
+  --muted: #8aa397;
+  --danger: #ff6b6b;
+  --radius: 18px;
+  --max: 1180px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-panel: var(--bg-panel);
+  --color-line: var(--line);
+  --color-phosphor: var(--phosphor);
+  --color-phosphor-dim: var(--phosphor-dim);
+  --color-amber: var(--amber);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-danger: var(--danger);
+  --font-mono-hud: var(--font-jetbrains-mono);
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--phosphor);
+  color: #04140b;
+}
+
+:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.font-hud {
+  font-family: var(--font-mono-hud), ui-monospace, monospace;
+}
+
+.font-display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+
+.container-hud {
+  width: min(calc(100% - 32px), var(--max));
+  margin: 0 auto;
+}
+
+/* HUD scanline + grid texture, used behind the hero */
+.hud-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 100%);
+  pointer-events: none;
+}
+
+.hud-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(124, 255, 178, 0.025) 0px,
+    rgba(124, 255, 178, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.glow-text {
+  text-shadow: 0 0 24px rgba(124, 255, 178, 0.35);
+}
+
+.tick {
+  animation: tick 3.2s steps(1) infinite;
+}
+
+@keyframes tick {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.horizon-roll {
+  animation: horizon-roll 8s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes horizon-roll {
+  0%, 100% { transform: rotate(-2.5deg) translateY(0); }
+  50% { transform: rotate(2.5deg) translateY(-4px); }
+}

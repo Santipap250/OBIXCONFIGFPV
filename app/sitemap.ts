@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { tools } from "@/lib/tools";
-
-const siteUrl = "https://obixconfigfpv.onrender.com";
+import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolRoutes: MetadataRoute.Sitemap = tools.map((tool) => ({

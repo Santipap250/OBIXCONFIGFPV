@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { siteUrl } from "@/lib/site";
 
 const inter = localFont({
   src: "./fonts/Inter.ttf",
@@ -19,8 +20,6 @@ const jetbrainsMono = localFont({
   variable: "--font-jetbrains-mono",
   display: "swap",
 });
-
-const siteUrl = "https://obixconfigfpv.onrender.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

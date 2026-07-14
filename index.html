@@ -1,47 +1,422 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
-<head>
-<meta charset="UTF-8">
-<title>OBIXConfig Doctor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050816" />
+    <title>OBIXCONFIG FPV</title>
+    <meta
+      name="description"
+      content="OBIXCONFIG FPV — premium FPV configuration website for pilots who want speed, clarity, and control."
+    />
+    <meta property="og:title" content="OBIXCONFIG FPV" />
+    <meta
+      property="og:description"
+      content="A premium FPV product experience designed for pilots, creators, and future app expansion."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/og-preview.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/logo.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+    <div class="bg-orb orb-c"></div>
+    <div class="grid-overlay"></div>
 
-<div class="card">
-  <h1>OBIXConfig Doctor</h1>
-  <p>วิเคราะห์โดรน FPV แบบมือโปร</p>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="OBIXCONFIG FPV Home">
+        <img src="assets/logo.svg" alt="" class="brand-mark" />
+        <span>
+          <strong>OBIXCONFIG FPV</strong>
+          <small>premium fpv product experience</small>
+        </span>
+      </a>
 
-  <div class="field">
-    <label>ขนาดเฟรม</label>
-    <select id="frame">
-      <option value="5inch">5 นิ้ว</option>
-      <option value="3.5inch">3.5 นิ้ว</option>
-    </select>
-  </div>
+      <nav class="desktop-nav" aria-label="Primary">
+        <a href="#tools">Tools</a>
+        <a href="#design">Design</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#faq">FAQ</a>
+        <a href="#download">Download</a>
+      </nav>
 
-  <div class="field">
-    <label>แบตเตอรี่</label>
-    <select id="battery">
-      <option value="4S">4S</option>
-      <option value="6S">6S</option>
-    </select>
-  </div>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">
+        <span class="menu-icon"></span>
+      </button>
 
-  <div class="field">
-    <label>สไตล์การบิน</label>
-    <select id="style">
-      <option value="freestyle">Freestyle</option>
-      <option value="cinematic">Cinematic</option>
-      <option value="longrange">Long Range</option>
-    </select>
-  </div>
+      <a class="button button-light desktop-cta" href="#download">Get the build</a>
+    </header>
 
-  <button onclick="analyze()">เริ่มวิเคราะห์</button>
+    <aside class="mobile-menu" id="mobileMenu" hidden>
+      <a href="#tools">Tools</a>
+      <a href="#design">Design</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#faq">FAQ</a>
+      <a href="#download">Download</a>
+    </aside>
 
-  <div id="result"></div>
-</div>
+    <main id="home">
+      <section class="hero container">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">New generation FPV website rebuild</span>
+          <h1>
+            The FPV platform that looks premium, feels fast, and is built to scale.
+          </h1>
+          <p class="lead">
+            OBIXCONFIG FPV is a modern product-grade website concept for FPV pilots,
+            designed to evolve into a real web app, PWA, and mobile app.
+          </p>
 
-<script src="app.js"></script>
-</body>
+          <div class="cta-row">
+            <a class="button button-light" href="#tools">Explore tools</a>
+            <a class="button button-ghost" href="#download">Download build pack</a>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card reveal">
+              <span>Mobile-first UI</span>
+              <strong>100%</strong>
+            </div>
+            <div class="stat-card reveal">
+              <span>Future app-ready</span>
+              <strong>Yes</strong>
+            </div>
+            <div class="stat-card reveal">
+              <span>Product-grade feel</span>
+              <strong>Premium</strong>
+            </div>
+            <div class="stat-card reveal">
+              <span>FPV-focused</span>
+              <strong>Always</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-panel reveal">
+          <div class="panel-header">
+            <div>
+              <p>Live console</p>
+              <h2>OBIXCONFIG FPV</h2>
+            </div>
+            <span class="status-pill">build ready</span>
+          </div>
+
+          <div class="panel-grid">
+            <div class="metric">
+              <span>Visual system</span>
+              <strong>Premium</strong>
+              <p>dark, glassy, sharp</p>
+            </div>
+            <div class="metric">
+              <span>Primary device</span>
+              <strong>Mobile</strong>
+              <p>one-hand friendly flow</p>
+            </div>
+            <div class="metric metric-wide">
+              <span>Core promise</span>
+              <div class="tag-row">
+                <span>FPV tools</span>
+                <span>Clean UX</span>
+                <span>Future app-ready</span>
+                <span>Pro-grade brand</span>
+                <span>GitHub repo ready</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tools" class="section container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Core tools</span>
+          <h2>A toolkit that mirrors real FPV workflows</h2>
+          <p>
+            The structure feels like a serious cockpit for pilots who want clarity
+            and action instead of a generic template.
+          </p>
+        </div>
+
+        <div class="tools-grid">
+          <button class="tool-card active reveal" data-tool="pid">
+            <span class="tool-icon">◎</span>
+            <div>
+              <h3>PID Advisor</h3>
+              <p>แนะนำทิศทางการจูนจากสไตล์การบิน เพื่อให้เริ่ม tuning ได้เร็วและแม่นขึ้น</p>
+            </div>
+          </button>
+
+          <button class="tool-card reveal" data-tool="blackbox">
+            <span class="tool-icon">▣</span>
+            <div>
+              <h3>Blackbox Analyzer</h3>
+              <p>ช่วยอ่านอาการสั่น แกว่ง และ noise จากข้อมูลจริงให้เข้าใจง่าย</p>
+            </div>
+          </button>
+
+          <button class="tool-card reveal" data-tool="build">
+            <span class="tool-icon">⟡</span>
+            <div>
+              <h3>Build Helper</h3>
+              <p>วางภาพรวมการประกอบโดรนให้เข้ากับเฟรม มอเตอร์ แบต และฟีลบิน</p>
+            </div>
+          </button>
+
+          <button class="tool-card reveal" data-tool="rates">
+            <span class="tool-icon">◌</span>
+            <div>
+              <h3>Rates Visualizer</h3>
+              <p>ทดลองฟีลคันเร่งและสติ๊กก่อนลงสนามจริง เพื่อหา setup ที่ถนัดที่สุด</p>
+            </div>
+          </button>
+
+          <button class="tool-card reveal" data-tool="flight">
+            <span class="tool-icon">◆</span>
+            <div>
+              <h3>Flight Readiness</h3>
+              <p>เช็กลิสต์ก่อนบินที่ช่วยลดความผิดพลาดและเพิ่มความปลอดภัย</p>
+            </div>
+          </button>
+
+          <button class="tool-card reveal" data-tool="presets">
+            <span class="tool-icon">✦</span>
+            <div>
+              <h3>Smart Presets</h3>
+              <p>พรีเซ็ตพื้นฐานสำหรับ freestyle, cinematic และ long range พร้อมต่อยอดได้</p>
+            </div>
+          </button>
+        </div>
+
+        <div class="details-grid reveal">
+          <div class="details-main">
+            <span class="eyebrow">Selected tool</span>
+            <div class="details-title">
+              <div class="details-badge" id="toolBadge">◎</div>
+              <div>
+                <h3 id="toolTitle">PID Advisor</h3>
+                <p id="toolDesc">
+                  แนะนำทิศทางการจูนจากสไตล์การบิน เพื่อให้เริ่ม tuning ได้เร็วและแม่นขึ้น
+                </p>
+              </div>
+            </div>
+            <div class="chips" id="toolChips"></div>
+          </div>
+
+          <div class="bucket-grid">
+            <div class="bucket-card">
+              <h4>Flight Intelligence</h4>
+              <ul>
+                <li>PID guidance</li>
+                <li>Filter strategy</li>
+                <li>Rates compare</li>
+                <li>Noise awareness</li>
+              </ul>
+            </div>
+            <div class="bucket-card">
+              <h4>Build & Tuning</h4>
+              <ul>
+                <li>Motor / prop matching</li>
+                <li>Battery fit</li>
+                <li>ESC readiness</li>
+                <li>Frame suitability</li>
+              </ul>
+            </div>
+            <div class="bucket-card">
+              <h4>Creator Workflow</h4>
+              <ul>
+                <li>Preset export</li>
+                <li>Config notes</li>
+                <li>Shareable pages</li>
+                <li>Social preview</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="design" class="section container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Design system</span>
+          <h2>Beautiful enough to feel like a brand, structured enough to become a product</h2>
+          <p>
+            The visual direction combines glass surfaces, crisp gradients, premium
+            spacing, and a strong mobile-first layout.
+          </p>
+        </div>
+
+        <div class="pillars-grid">
+          <article class="pillars-card reveal">
+            <span class="pillars-icon">⚡</span>
+            <h3>Speed</h3>
+            <p>หน้าเว็บต้องโหลดไว ใช้ง่าย และพาไปยังเครื่องมือที่ต้องการได้ทันที</p>
+          </article>
+          <article class="pillars-card reveal">
+            <span class="pillars-icon">◈</span>
+            <h3>Clarity</h3>
+            <p>โครงสร้างข้อมูลและคำอธิบายต้องชัดเจนสำหรับทั้งมือใหม่และสายจริงจัง</p>
+          </article>
+          <article class="pillars-card reveal">
+            <span class="pillars-icon">◆</span>
+            <h3>Trust</h3>
+            <p>ภาพรวมแบรนด์ต้องดูน่าเชื่อถือเหมือนเป็น product ที่พร้อมใช้งานจริง</p>
+          </article>
+          <article class="pillars-card reveal">
+            <span class="pillars-icon">◔</span>
+            <h3>Scale</h3>
+            <p>โครงสร้างต้องพร้อมต่อยอดไปยัง PWA, login, cloud sync และ mobile app</p>
+          </article>
+        </div>
+
+        <div class="design-split">
+          <div class="glass-card reveal">
+            <span class="eyebrow">Brand direction</span>
+            <h3>OBIXCONFIG FPV should feel like a premium cockpit</h3>
+            <p>
+              Strong contrast, smooth depth, and confident typography create a
+              product that feels premium enough to launch publicly.
+            </p>
+            <div class="tag-row narrow">
+              <span>dark mode first</span>
+              <span>glow accents</span>
+              <span>glass cards</span>
+              <span>rounded corners</span>
+              <span>sharp hierarchy</span>
+            </div>
+          </div>
+
+          <div class="glass-card reveal">
+            <div class="mini-layout">
+              <div>
+                <strong>Landing</strong>
+                <p>hero, tools, preview, CTA</p>
+              </div>
+              <div>
+                <strong>Dashboard</strong>
+                <p>overview and quick actions</p>
+              </div>
+              <div>
+                <strong>Tools</strong>
+                <p>analysis, presets, calculators</p>
+              </div>
+              <div>
+                <strong>App path</strong>
+                <p>PWA, login, sync, export</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="roadmap" class="section container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Build roadmap</span>
+          <h2>From concept website to product foundation</h2>
+          <p>This is the route I would use to keep the project beautiful, stable, and easy to grow.</p>
+        </div>
+
+        <div class="roadmap-grid">
+          <article class="roadmap-card reveal">
+            <span class="step">Phase 1</span>
+            <h3>Foundation rebuild</h3>
+            <p>วางโครงหน้าแรก, navigation, design system, และ component หลักทั้งหมด</p>
+          </article>
+          <article class="roadmap-card reveal">
+            <span class="step">Phase 2</span>
+            <h3>Tool ecosystem</h3>
+            <p>สร้างหน้าฟังก์ชันหลักแบบ reuse ได้ และต่อยอดด้วย shared states / data models</p>
+          </article>
+          <article class="roadmap-card reveal">
+            <span class="step">Phase 3</span>
+            <h3>Product polish</h3>
+            <p>เก็บ motion, SEO, performance, accessibility, share preview, และ micro-interactions</p>
+          </article>
+          <article class="roadmap-card reveal">
+            <span class="step">Phase 4</span>
+            <h3>App expansion</h3>
+            <p>เตรียม PWA, saved presets, user profile, sync, and app-store deployment path</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="faq" class="section container">
+        <div class="section-head reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2>Questions the new site should answer clearly</h2>
+          <p>A premium product should explain itself quickly and remove confusion for new visitors.</p>
+        </div>
+
+        <div class="faq-grid">
+          <details class="faq-card reveal" open>
+            <summary>ทำไมต้องสร้างใหม่ทั้งหมด ไม่ใช่แค่ปรับเว็บเดิม?</summary>
+            <p>
+              เพราะโปรเจกต์แบบนี้จะโตได้ดีเมื่อมีโครงสร้างใหม่ที่ชัดเจนตั้งแต่แรก
+              ทั้งด้าน UX, design system, และ architecture สำหรับ future app.
+            </p>
+          </details>
+          <details class="faq-card reveal">
+            <summary>เว็บนี้เหมาะกับใคร?</summary>
+            <p>
+              เหมาะกับ FPV pilots ทุกระดับ โดยเฉพาะคนที่อยากได้เครื่องมือที่เข้าใจง่าย
+              แต่ยังลึกพอสำหรับการใช้งานจริง.
+            </p>
+          </details>
+          <details class="faq-card reveal">
+            <summary>ต่อยอดเป็นแอพได้ไหม?</summary>
+            <p>
+              ได้ และควรออกแบบให้ไปทางนั้นตั้งแต่ต้น เช่น โครงสร้าง page, components,
+              data flow, และ responsive UX.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section id="download" class="section container">
+        <div class="download-card reveal">
+          <div>
+            <span class="eyebrow">Delivery ready</span>
+            <h2>Ready to become the new GitHub repository for OBIXCONFIG FPV.</h2>
+            <p>
+              This is a foundation that feels premium today and stays flexible for
+              tomorrow. Clean structure, sharp visuals, and a clear path to future
+              app expansion.
+            </p>
+            <div class="cta-row">
+              <a class="button button-light" href="#">Export build package</a>
+              <a class="button button-ghost" href="#tools">Review the UI</a>
+            </div>
+          </div>
+
+          <div class="download-side">
+            <div class="repo-box">
+              <span>Suggested repo name</span>
+              <strong>OBIXCONFIG-FPV</strong>
+              <p>Clean, modern, and ready for a fresh repository that can grow into a serious FPV product.</p>
+            </div>
+            <div class="mini-layout compact">
+              <div>
+                <strong>Primary stack</strong>
+                <p>HTML + CSS + JS</p>
+              </div>
+              <div>
+                <strong>Future path</strong>
+                <p>PWA + Mobile</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>© 2026 OBIXCONFIG FPV — built for pilots, creators, and future app expansion.</p>
+        <p>Premium rebuild concept ready for GitHub.</p>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
 </html>

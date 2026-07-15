@@ -5,6 +5,13 @@ import { tools, statusLabel } from "@/lib/tools";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Reveal from "@/components/Reveal";
+import PidAdvisorTool from "@/components/PidAdvisorTool";
+
+// Tools with a real, working implementation. Anything not listed here still
+// gets an honest "in development" notice instead of a fake calculator.
+const implementedTools: Partial<Record<string, () => React.JSX.Element>> = {
+  pid: PidAdvisorTool,
+};
 
 export function generateStaticParams() {
   return tools.map((tool) => ({ slug: tool.slug }));
@@ -66,13 +73,23 @@ export default async function ToolPage({
           </div>
         </Reveal>
 
-        {tool.status !== "live" && (
-          <Reveal delay={140}>
-            <div className="mt-8 rounded-xl border border-amber/40 bg-amber/5 px-5 py-4 text-sm text-amber">
-              เครื่องมือนี้ยังอยู่ระหว่างพัฒนา — หน้านี้แสดงสถานะและทิศทางจริง ยังไม่ใช่เครื่องมือที่ใช้งานคำนวณได้เต็มรูปแบบ
-            </div>
-          </Reveal>
-        )}
+        {(() => {
+          const ToolComponent = implementedTools[tool.slug];
+          if (ToolComponent) {
+            return (
+              <Reveal delay={140}>
+                <ToolComponent />
+              </Reveal>
+            );
+          }
+          return (
+            <Reveal delay={140}>
+              <div className="mt-8 rounded-xl border border-amber/40 bg-amber/5 px-5 py-4 text-sm text-amber">
+                เครื่องมือนี้ยังอยู่ระหว่างพัฒนา — หน้านี้แสดงสถานะและทิศทางจริง ยังไม่ใช่เครื่องมือที่ใช้งานคำนวณได้เต็มรูปแบบ
+              </div>
+            </Reveal>
+          );
+        })()}
 
         <Reveal delay={200}>
           <div className="mt-14">

@@ -47,12 +47,12 @@ export const tools: Tool[] = [
     title: "Build Helper",
     short: "Match frame, motor, battery, and feel",
     description: "วางภาพรวมการประกอบโดรนให้เข้ากับเฟรม มอเตอร์ แบต และฟีลบิน",
-    status: "planned",
-    chips: ["เช็กความเข้ากันของชุดขับ", "ประเมิน thrust-to-weight", "ลดการซื้อผิดสเปก"],
+    status: "beta",
+    chips: ["Power-to-weight จากไฟฟ้าจริง", "เตือน ESC/มอเตอร์ไม่เข้ากัน", "จัดกลุ่มตามสไตล์การบิน"],
     detail: [
-      "กรอกเฟรม มอเตอร์ (kv), prop, เซลล์แบต แล้วดูอัตราส่วนแรงขับต่อน้ำหนักโดยประมาณ",
+      "กรอก AUW เซลล์แบต และ current rating ของ ESC/มอเตอร์ แล้วดู power-to-weight (W/g) ที่คำนวณจากไฟฟ้าจริง",
       "เตือนคู่อุปกรณ์ที่ไม่เข้ากัน เช่น ESC amp rating ต่ำกว่าที่มอเตอร์ต้องการ",
-      "แนะนำช่วง prop/kv ทางเลือกตามสไตล์การบินที่ตั้งไว้",
+      "จัดกลุ่มผลลัพธ์ตามเกณฑ์ community: freestyle / all-round / long range",
     ],
   },
   {
@@ -61,8 +61,8 @@ export const tools: Tool[] = [
     title: "Rates Visualizer",
     short: "Feel your stick response before the field",
     description: "ทดลองฟีลคันเร่งและสติ๊กก่อนลงสนามจริง เพื่อหา setup ที่ถนัดที่สุด",
-    status: "planned",
-    chips: ["กราฟ response แบบ real-time", "เทียบ rates หลายชุดพร้อมกัน", "พรีเซ็ตเริ่มต้นตามสไตล์"],
+    status: "beta",
+    chips: ["กราฟ response แบบ real-time", "เทียบ rates หลายชุดพร้อมกัน", "สูตร Actual Rates ของ Betaflight จริง"],
     detail: [
       "ปรับ RC rate, super rate และ expo แล้วเห็นกราฟ stick-to-rotation ทันที",
       "เทียบ curve เดิมกับ curve ใหม่แบบซ้อนกันบนกราฟเดียว",

@@ -1,16 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import { readStorage, writeStorage } from "./storage";
-
-function subscribe(onChange: () => void) {
-  window.addEventListener("obixconfigfpv:storage", onChange);
-  return () => window.removeEventListener("obixconfigfpv:storage", onChange);
-}
-
-function notify() {
-  window.dispatchEvent(new Event("obixconfigfpv:storage"));
-}
+import { readStorage, writeStorage, notifyStorageChange, subscribeToStorageChange } from "./storage";
 
 /**
  * Reads/writes a JSON value in localStorage, kept in sync with React state
@@ -27,7 +18,7 @@ export function useLocalStorage<T>(key: string, fallback: T): [T, (value: T) => 
 
   const getServerSnapshot = useCallback(() => JSON.stringify(fallback), [fallback]);
 
-  const raw = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const raw = useSyncExternalStore(subscribeToStorageChange, getSnapshot, getServerSnapshot);
 
   const value = (() => {
     try {
@@ -40,7 +31,7 @@ export function useLocalStorage<T>(key: string, fallback: T): [T, (value: T) => 
   const setValue = useCallback(
     (next: T) => {
       writeStorage(key, next);
-      notify();
+      notifyStorageChange();
     },
     [key]
   );

@@ -42,6 +42,46 @@ function rms(values: number[]): number {
   return Math.sqrt(mean(values.map((v) => v * v)));
 }
 
+export interface PidSuggestion {
+  direction: "lower-d" | "raise-p" | "balanced";
+  label: string;
+  pAdjustPercent?: number;
+  dAdjustPercent?: number;
+}
+
+export function derivePidSuggestion(result: BlackboxResult): PidSuggestion | null {
+  const axesWithData = (["roll", "pitch", "yaw"] as const)
+    .map((axis) => result.axisStats[axis])
+    .filter((s) => s.jitter !== null && s.rmsTrackingError !== null);
+
+  if (axesWithData.length === 0) return null;
+
+  const avgRatio = mean(
+    axesWithData.map((s) => (s.jitter as number) / Math.max(s.rmsTrackingError as number, 0.5))
+  );
+
+  if (avgRatio > 1.6) {
+    return {
+      direction: "lower-d",
+      label: "jitter สูงเทียบกับ tracking error — D อาจสูงไปหรือ filter ไม่พอ ลอง D ลง ~10%",
+      dAdjustPercent: -10,
+    };
+  }
+
+  if (avgRatio < 0.5 && mean(axesWithData.map((s) => s.rmsTrackingError as number)) > 5) {
+    return {
+      direction: "raise-p",
+      label: "tracking error สูงแต่ jitter ต่ำ — ตอบสนองอาจช้าไป ลอง P ขึ้น ~10%",
+      pAdjustPercent: 10,
+    };
+  }
+
+  return {
+    direction: "balanced",
+    label: "อัตราส่วน jitter ต่อ tracking error อยู่ในเกณฑ์สมดุล ยังไม่มีคำแนะนำปรับพิเศษจาก log นี้",
+  };
+}
+
 export function parseBlackboxCsv(text: string): BlackboxResult {
   const warnings: string[] = [];
   const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);

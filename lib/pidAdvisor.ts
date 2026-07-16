@@ -36,6 +36,42 @@ const STYLE_MULTIPLIER: Record<FlyingStyle, { gain: number; ff: number; note: st
   micro: { gain: 1.15, ff: 1.1, note: "Micro: เพิ่ม gain ~15% ชดเชยเฟรมเบาที่สั่นไวกว่า" },
 };
 
+export interface PidAdjustment {
+  pAdjustPercent?: number;
+  dAdjustPercent?: number;
+  label: string;
+}
+
+export function applyAdjustment(base: PidResult, adjustment: PidAdjustment): PidResult {
+  const pFactor = 1 + (adjustment.pAdjustPercent ?? 0) / 100;
+  const dFactor = 1 + (adjustment.dAdjustPercent ?? 0) / 100;
+
+  const roll: AxisGains = { p: Math.round(base.roll.p * pFactor), i: base.roll.i, d: Math.round(base.roll.d * dFactor) };
+  const pitch: AxisGains = { p: Math.round(base.pitch.p * pFactor), i: base.pitch.i, d: Math.round(base.pitch.d * dFactor) };
+  const yaw = { p: Math.round(base.yaw.p * pFactor), i: base.yaw.i };
+  const dMin = Math.round(roll.d * 0.7);
+
+  const reasons = [...base.reasons, `ปรับเพิ่มเติมจาก Blackbox Analyzer: ${adjustment.label}`];
+
+  const cliSnippet = [
+    `set p_pitch = ${pitch.p}`,
+    `set i_pitch = ${pitch.i}`,
+    `set d_pitch = ${pitch.d}`,
+    `set p_roll = ${roll.p}`,
+    `set i_roll = ${roll.i}`,
+    `set d_roll = ${roll.d}`,
+    `set p_yaw = ${yaw.p}`,
+    `set i_yaw = ${yaw.i}`,
+    `set d_min_roll = ${dMin}`,
+    `set d_min_pitch = ${dMin}`,
+    `set ff_pitch = ${base.feedforward}`,
+    `set ff_roll = ${base.feedforward}`,
+    `save`,
+  ].join("\n");
+
+  return { roll, pitch, yaw, dMin, feedforward: base.feedforward, reasons, cliSnippet };
+}
+
 export function calculatePid(input: PidInputs): PidResult {
   const reasons: string[] = [];
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import { parseBlackboxCsv, type BlackboxResult } from "@/lib/blackboxAnalyzer";
+import { useCallback, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { parseBlackboxCsv, derivePidSuggestion, type BlackboxResult } from "@/lib/blackboxAnalyzer";
 
 const AXIS_LABELS = { roll: "Roll", pitch: "Pitch", yaw: "Yaw" } as const;
 
@@ -11,6 +12,8 @@ export default function BlackboxAnalyzerTool() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const suggestion = useMemo(() => (result ? derivePidSuggestion(result) : null), [result]);
 
   const handleFile = useCallback((file: File) => {
     setError(null);
@@ -157,6 +160,28 @@ export default function BlackboxAnalyzerTool() {
                   <p className="text-lg text-ink">{result.battery.max.toFixed(2)}v</p>
                 </div>
               </div>
+            </div>
+          )}
+
+          {suggestion && (
+            <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
+              <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">
+                ส่งต่อไป PID Advisor
+              </span>
+              <p className="mt-2 text-sm text-ink">{suggestion.label}</p>
+              {suggestion.direction !== "balanced" && (
+                <Link
+                  href={`/tools/pid?${[
+                    suggestion.pAdjustPercent ? `pAdj=${suggestion.pAdjustPercent}` : null,
+                    suggestion.dAdjustPercent ? `dAdj=${suggestion.dAdjustPercent}` : null,
+                  ]
+                    .filter(Boolean)
+                    .join("&")}`}
+                  className="font-hud mt-4 inline-block rounded-md border border-line-strong px-4 py-2 text-xs uppercase tracking-[0.15em] text-phosphor hover:bg-phosphor hover:text-[#04140b]"
+                >
+                  เปิดใน PID Advisor พร้อมคำแนะนำนี้ →
+                </Link>
+              )}
             </div>
           )}
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { calculatePid, type FlyingStyle } from "@/lib/pidAdvisor";
+import Link from "next/link";
+import { calculatePid, applyAdjustment, type FlyingStyle, type PidAdjustment } from "@/lib/pidAdvisor";
 
 const styles: { value: FlyingStyle; label: string }[] = [
   { value: "freestyle", label: "Freestyle" },
@@ -10,16 +11,21 @@ const styles: { value: FlyingStyle; label: string }[] = [
   { value: "micro", label: "Micro" },
 ];
 
-export default function PidAdvisorTool() {
+export default function PidAdvisorTool({ initialAdjustment }: { initialAdjustment?: PidAdjustment }) {
   const [propSizeInches, setPropSizeInches] = useState(5);
   const [motorKv, setMotorKv] = useState(1700);
   const [cells, setCells] = useState(4);
   const [style, setStyle] = useState<FlyingStyle>("freestyle");
   const [copied, setCopied] = useState(false);
 
-  const result = useMemo(
+  const baseResult = useMemo(
     () => calculatePid({ propSizeInches, motorKv, cells, style }),
     [propSizeInches, motorKv, cells, style]
+  );
+
+  const result = useMemo(
+    () => (initialAdjustment ? applyAdjustment(baseResult, initialAdjustment) : baseResult),
+    [baseResult, initialAdjustment]
   );
 
   const handleCopy = async () => {
@@ -33,7 +39,21 @@ export default function PidAdvisorTool() {
   };
 
   return (
-    <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+    <div className="mt-10">
+      {initialAdjustment && (
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-phosphor/40 bg-phosphor/5 px-5 py-4">
+          <p className="text-sm text-ink">
+            <span className="font-hud text-phosphor">ปรับจาก Blackbox Analyzer:</span> {initialAdjustment.label}
+          </p>
+          <Link
+            href="/tools/pid"
+            className="font-hud shrink-0 text-[11px] uppercase tracking-[0.15em] text-muted hover:text-danger"
+          >
+            ล้างการปรับ
+          </Link>
+        </div>
+      )}
+      <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
       {/* Inputs */}
       <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
         <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Build inputs</span>
@@ -170,6 +190,7 @@ export default function PidAdvisorTool() {
           ไม่ใช่คำตอบสุดท้าย — ควรทดลองบินและปรับตาม feel จริงหรือใช้ร่วมกับ Blackbox Analyzer เมื่อพร้อมใช้งาน
         </p>
       </div>
+    </div>
     </div>
   );
 }

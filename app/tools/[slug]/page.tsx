@@ -8,6 +8,8 @@ import Reveal from "@/components/Reveal";
 import PidAdvisorTool from "@/components/PidAdvisorTool";
 import RatesVisualizerTool from "@/components/RatesVisualizerTool";
 import BuildHelperTool from "@/components/BuildHelperTool";
+import FlightReadinessTool from "@/components/FlightReadinessTool";
+import SmartPresetsTool from "@/components/SmartPresetsTool";
 
 // Tools with a real, working implementation. Anything not listed here still
 // gets an honest "in development" notice instead of a fake calculator.
@@ -15,6 +17,8 @@ const implementedTools: Partial<Record<string, () => React.JSX.Element>> = {
   pid: PidAdvisorTool,
   rates: RatesVisualizerTool,
   build: BuildHelperTool,
+  flight: FlightReadinessTool,
+  presets: SmartPresetsTool,
 };
 
 export function generateStaticParams() {

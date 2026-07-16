@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const staticRoutes: MetadataRoute.Sitemap = ["about", "roadmap", "faq", "download"].map((path) => ({
+    url: `${siteUrl}/${path}`,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   return [
     {
       url: siteUrl,
@@ -16,5 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...toolRoutes,
+    ...staticRoutes,
   ];
 }

@@ -4,10 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 
 const navLinks = [
-  { href: "#tools", label: "Tools" },
-  { href: "#design", label: "Design" },
-  { href: "#roadmap", label: "Roadmap" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#tools", label: "Tools" },
+  { href: "/about", label: "About" },
+  { href: "/roadmap", label: "Roadmap" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export default function SiteHeader() {
@@ -34,18 +34,18 @@ export default function SiteHeader() {
 
         <nav aria-label="Primary" className="font-hud hidden items-center gap-8 text-xs uppercase tracking-[0.15em] text-muted md:flex">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="transition-colors hover:text-phosphor">
+            <Link key={link.href} href={link.href} className="transition-colors hover:text-phosphor">
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
-        <a
-          href="#download"
+        <Link
+          href="/download"
           className="font-hud hidden rounded-md border border-line-strong px-4 py-2 text-xs uppercase tracking-[0.15em] text-phosphor transition-colors hover:bg-phosphor hover:text-[#04140b] md:block"
         >
           Get the build
-        </a>
+        </Link>
 
         <button
           type="button"
@@ -74,19 +74,19 @@ export default function SiteHeader() {
           <ul className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <a href={link.href} onClick={() => setOpen(false)} className="block hover:text-phosphor">
+                <Link href={link.href} onClick={() => setOpen(false)} className="block hover:text-phosphor">
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
             <li>
-              <a
-                href="#download"
+              <Link
+                href="/download"
                 onClick={() => setOpen(false)}
                 className="block text-phosphor"
               >
                 Get the build
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>

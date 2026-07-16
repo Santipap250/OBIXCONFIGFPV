@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -5,7 +6,7 @@ import { tools, statusLabel } from "@/lib/tools";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import Reveal from "@/components/Reveal";
-import PidAdvisorTool from "@/components/PidAdvisorTool";
+import PidAdvisorWithParams from "@/components/PidAdvisorWithParams";
 import RatesVisualizerTool from "@/components/RatesVisualizerTool";
 import BuildHelperTool from "@/components/BuildHelperTool";
 import FlightReadinessTool from "@/components/FlightReadinessTool";
@@ -15,7 +16,7 @@ import BlackboxAnalyzerTool from "@/components/BlackboxAnalyzerTool";
 // Tools with a real, working implementation. Anything not listed here still
 // gets an honest "in development" notice instead of a fake calculator.
 const implementedTools: Partial<Record<string, () => React.JSX.Element>> = {
-  pid: PidAdvisorTool,
+  pid: PidAdvisorWithParams,
   rates: RatesVisualizerTool,
   build: BuildHelperTool,
   flight: FlightReadinessTool,
@@ -88,7 +89,9 @@ export default async function ToolPage({
           if (ToolComponent) {
             return (
               <Reveal delay={140}>
-                <ToolComponent />
+                <Suspense fallback={<div className="mt-10 text-sm text-muted">Loading tool…</div>}>
+                  <ToolComponent />
+                </Suspense>
               </Reveal>
             );
           }

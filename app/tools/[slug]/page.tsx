@@ -10,7 +10,7 @@ import PidAdvisorWithParams from "@/components/PidAdvisorWithParams";
 import RatesVisualizerTool from "@/components/RatesVisualizerTool";
 import BuildHelperTool from "@/components/BuildHelperTool";
 import FlightReadinessTool from "@/components/FlightReadinessTool";
-import SmartPresetsTool from "@/components/SmartPresetsTool";
+import SmartPresetsWithParams from "@/components/SmartPresetsWithParams";
 import BlackboxAnalyzerTool from "@/components/BlackboxAnalyzerTool";
 
 // Tools with a real, working implementation. Anything not listed here still
@@ -20,7 +20,7 @@ const implementedTools: Partial<Record<string, () => React.JSX.Element>> = {
   rates: RatesVisualizerTool,
   build: BuildHelperTool,
   flight: FlightReadinessTool,
-  presets: SmartPresetsTool,
+  presets: SmartPresetsWithParams,
   blackbox: BlackboxAnalyzerTool,
 };
 

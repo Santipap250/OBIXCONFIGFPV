@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="120" fill="#f4f6f5"/>
+  <rect x="6" y="6" width="500" height="500" rx="114" fill="none" stroke="#e2e6e4" stroke-width="2"/>
+  <g transform="translate(128,128) scale(4)">
+    <polygon points="55.4,45.5 32,59 8.6,45.5 8.6,18.5 32,5 55.4,18.5" fill="none" stroke="#8b3fd1" stroke-width="2.4" stroke-linejoin="round"/>
+    <g stroke="#8b3fd1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      
+      <path d="M12,32 L18,32 L21,20 L25,45 L29,23 L33,32 L38,32" fill="none"/>
+      <circle cx="46" cy="32" r="7.5" fill="none"/>
+      <line x1="46" y1="26.5" x2="46" y2="29.5"/>
+      <line x1="46" y1="34.5" x2="46" y2="37.5"/>
+      <line x1="40.5" y1="32" x2="43.5" y2="32"/>
+      <line x1="48.5" y1="32" x2="51.5" y2="32"/>
+    
+    </g>
+  </g>
+</svg>

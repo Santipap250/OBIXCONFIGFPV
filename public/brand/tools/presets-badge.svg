@@ -1,0 +1,26 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#ff9d4d" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ff9d4d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stroke-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9d4d"/>
+      <stop offset="100%" stop-color="#ff9d4d" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="#05070a"/>
+  <rect width="512" height="512" rx="120" fill="url(#glow)"/>
+  <g transform="translate(128,128) scale(4)">
+    <polygon points="55.4,45.5 32,59 8.6,45.5 8.6,18.5 32,5 55.4,18.5" fill="none" stroke="url(#stroke-grad)" stroke-width="2.4" stroke-linejoin="round"/>
+    <g stroke="url(#stroke-grad)" stroke-width="3">
+      
+      <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M32,12.5 L34.4,17.6 L40,18.3 L35.9,22.1 L37,27.7 L32,25 L27,27.7 L28.1,22.1 L24,18.3 L29.6,17.6 Z" fill="#04070a"/>
+        <path d="M20,34 L32,40 L44,34"/>
+        <path d="M20,42 L32,48 L44,42"/>
+      </g>
+    
+    </g>
+  </g>
+</svg>

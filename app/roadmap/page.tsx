@@ -4,6 +4,7 @@ import SiteFooter from "@/components/SiteFooter";
 import PageHeader from "@/components/PageHeader";
 import RoadmapSection from "@/components/RoadmapSection";
 import Reveal from "@/components/Reveal";
+import ToolIcon from "@/components/icons/ToolIcon";
 import { tools, statusLabel } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -34,8 +35,16 @@ export default function RoadmapPage() {
               <tbody>
                 {tools.map((tool) => (
                   <tr key={tool.slug} className="border-b border-line last:border-0">
-                    <td className="px-5 py-3 text-ink">{tool.title}</td>
-                    <td className="font-hud px-5 py-3 text-xs uppercase tracking-[0.15em] text-muted">
+                    <td className="px-5 py-3 text-ink">
+                      <div className="flex items-center gap-3">
+                        <ToolIcon tool={tool.color} size={22} glow={false} />
+                        {tool.title}
+                      </div>
+                    </td>
+                    <td
+                      style={{ color: tool.status === "live" ? `var(--tool-${tool.color})` : undefined }}
+                      className="font-hud px-5 py-3 text-xs uppercase tracking-[0.15em] text-muted"
+                    >
                       {statusLabel[tool.status]}
                     </td>
                   </tr>

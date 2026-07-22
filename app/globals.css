@@ -13,6 +13,14 @@
   --danger: #ff6b6b;
   --radius: 18px;
   --max: 1180px;
+
+  /* Instrument accent colors — one per core tool, same cyber-OSD language */
+  --tool-pid: #38f2b0;
+  --tool-blackbox: #c77dff;
+  --tool-build: #4fd1ff;
+  --tool-rates: #a6ff4d;
+  --tool-flight: #ffcf5c;
+  --tool-presets: #ff9d4d;
 }
 
 @theme inline {
@@ -25,6 +33,12 @@
   --color-ink: var(--text);
   --color-muted: var(--muted);
   --color-danger: var(--danger);
+  --color-tool-pid: var(--tool-pid);
+  --color-tool-blackbox: var(--tool-blackbox);
+  --color-tool-build: var(--tool-build);
+  --color-tool-rates: var(--tool-rates);
+  --color-tool-flight: var(--tool-flight);
+  --color-tool-presets: var(--tool-presets);
   --font-mono-hud: var(--font-jetbrains-mono);
   --font-display: var(--font-space-grotesk);
   --font-body: var(--font-inter);
@@ -148,4 +162,79 @@ a {
 @keyframes horizon-roll {
   0%, 100% { transform: rotate(-2.5deg) translateY(0); }
   50% { transform: rotate(2.5deg) translateY(-4px); }
+}
+
+/* Corner-bracket HUD frame, used on instrument cards */
+.hud-corners {
+  position: relative;
+}
+
+.hud-corners::before,
+.hud-corners::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--corner-color, var(--phosphor));
+  opacity: 0.75;
+  transition: opacity 0.25s ease, width 0.25s ease, height 0.25s ease;
+  pointer-events: none;
+}
+
+.hud-corners::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 6px 0 0 0;
+}
+
+.hud-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+  border-radius: 0 0 6px 0;
+}
+
+.hud-corners:hover::before,
+.hud-corners:hover::after {
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+}
+
+/* Instrument card — the shared shell for each tool card */
+.tool-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0) 40%), var(--bg-panel);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tool-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(160px 120px at 20% 0%, var(--tool-color, var(--phosphor)), transparent 70%);
+  transition: opacity 0.35s ease;
+}
+
+.tool-card:hover,
+.tool-card:focus-within {
+  transform: translateY(-3px);
+  border-color: var(--tool-color, var(--phosphor));
+  box-shadow: 0 18px 40px -20px var(--tool-color, var(--phosphor));
+}
+
+.tool-card:hover::before,
+.tool-card:focus-within::before {
+  opacity: 0.16;
+}
+
+.icon-glow {
+  filter: drop-shadow(0 0 10px var(--tool-color, var(--phosphor)));
 }

@@ -9,10 +9,13 @@ export interface Tool {
   status: ToolStatus;
   chips: string[];
   detail: string[];
+  /** CSS var suffix — resolves to var(--tool-{color}), also used as icon key */
+  color: "pid" | "blackbox" | "build" | "rates" | "flight" | "presets";
 }
 
 export const tools: Tool[] = [
   {
+    color: "pid",
     slug: "pid",
     badge: "PID",
     title: "PID Advisor",
@@ -28,6 +31,7 @@ export const tools: Tool[] = [
     ],
   },
   {
+    color: "blackbox",
     slug: "blackbox",
     badge: "BBX",
     title: "Blackbox Analyzer",
@@ -42,6 +46,7 @@ export const tools: Tool[] = [
     ],
   },
   {
+    color: "build",
     slug: "build",
     badge: "BLD",
     title: "Build Helper",
@@ -56,6 +61,7 @@ export const tools: Tool[] = [
     ],
   },
   {
+    color: "rates",
     slug: "rates",
     badge: "RTE",
     title: "Rates Visualizer",
@@ -70,6 +76,7 @@ export const tools: Tool[] = [
     ],
   },
   {
+    color: "flight",
     slug: "flight",
     badge: "CHK",
     title: "Flight Readiness",
@@ -84,6 +91,7 @@ export const tools: Tool[] = [
     ],
   },
   {
+    color: "presets",
     slug: "presets",
     badge: "PRE",
     title: "Smart Presets",

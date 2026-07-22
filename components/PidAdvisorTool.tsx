@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { calculatePid, applyAdjustment, type FlyingStyle, type PidAdjustment } from "@/lib/pidAdvisor";
+import { useBuildProfiles } from "@/lib/useBuildProfiles";
+import ActiveBuildBanner from "./ActiveBuildBanner";
 
 const styles: { value: FlyingStyle; label: string }[] = [
   { value: "freestyle", label: "Freestyle" },
@@ -12,11 +14,20 @@ const styles: { value: FlyingStyle; label: string }[] = [
 ];
 
 export default function PidAdvisorTool({ initialAdjustment }: { initialAdjustment?: PidAdjustment }) {
+  const { activeProfile } = useBuildProfiles();
   const [propSizeInches, setPropSizeInches] = useState(5);
   const [motorKv, setMotorKv] = useState(1700);
   const [cells, setCells] = useState(4);
   const [style, setStyle] = useState<FlyingStyle>("freestyle");
   const [copied, setCopied] = useState(false);
+
+  const loadFromActiveBuild = () => {
+    if (!activeProfile) return;
+    if (activeProfile.frameSizeInches) setPropSizeInches(activeProfile.frameSizeInches);
+    if (activeProfile.motorKv) setMotorKv(activeProfile.motorKv);
+    if (activeProfile.batteryCells) setCells(activeProfile.batteryCells);
+    if (activeProfile.flyingStyle) setStyle(activeProfile.flyingStyle);
+  };
 
   const baseResult = useMemo(
     () => calculatePid({ propSizeInches, motorKv, cells, style }),
@@ -40,6 +51,7 @@ export default function PidAdvisorTool({ initialAdjustment }: { initialAdjustmen
 
   return (
     <div className="mt-10">
+      <ActiveBuildBanner />
       {initialAdjustment && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-phosphor/40 bg-phosphor/5 px-5 py-4">
           <p className="text-sm text-ink">
@@ -56,7 +68,18 @@ export default function PidAdvisorTool({ initialAdjustment }: { initialAdjustmen
       <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
       {/* Inputs */}
       <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
-        <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Build inputs</span>
+        <div className="flex items-center justify-between">
+          <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Build inputs</span>
+          {activeProfile && (
+            <button
+              type="button"
+              onClick={loadFromActiveBuild}
+              className="font-hud text-[11px] uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor"
+            >
+              โหลดจาก Active Build
+            </button>
+          )}
+        </div>
 
         <label className="mt-5 block text-sm text-muted">
           ขนาด Prop: <span className="font-hud text-ink">{propSizeInches}&quot;</span>

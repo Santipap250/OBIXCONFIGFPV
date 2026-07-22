@@ -1,4 +1,4 @@
-export type FlyingStyle = "freestyle" | "cinematic" | "longrange" | "micro";
+export type FlyingStyle = "beginner" | "freestyle" | "cinematic" | "racing" | "longrange" | "micro";
 
 export interface PidInputs {
   propSizeInches: number;
@@ -30,8 +30,10 @@ const BASE_YAW = { p: 45, i: 80 };
 const BASE_FEEDFORWARD = 90;
 
 const STYLE_MULTIPLIER: Record<FlyingStyle, { gain: number; ff: number; note: string }> = {
+  beginner: { gain: 0.65, ff: 0.7, note: "Beginner: ลด gain ลงมากเพื่อความนิ่งและคาดเดาง่าย เหมาะกับการฝึกควบคุม" },
   freestyle: { gain: 1.0, ff: 1.0, note: "Freestyle: ใช้ baseline ตรง ๆ เน้นตอบสนองไว" },
   cinematic: { gain: 0.85, ff: 0.85, note: "Cinematic: ลด gain ~15% ให้ภาพนิ่งและนุ่มขึ้น" },
+  racing: { gain: 1.1, ff: 1.05, note: "Racing: เพิ่ม gain และ feedforward ให้ตอบสนองไวที่สุดสำหรับการแข่ง" },
   longrange: { gain: 0.75, ff: 0.8, note: "Long range: ลด gain ~25% เพื่อประหยัดพลังงานและลดความร้อนมอเตอร์" },
   micro: { gain: 1.15, ff: 1.1, note: "Micro: เพิ่ม gain ~15% ชดเชยเฟรมเบาที่สั่นไวกว่า" },
 };

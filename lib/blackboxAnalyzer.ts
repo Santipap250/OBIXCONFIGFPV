@@ -82,6 +82,43 @@ export function derivePidSuggestion(result: BlackboxResult): PidSuggestion | nul
   };
 }
 
+export interface SavedAnalysis {
+  id: string;
+  fileName: string;
+  createdAt: string;
+  buildProfileName?: string;
+  sampleCount: number;
+  durationSeconds: number | null;
+  motorSaturationPercent: number | null;
+  batterySagPercent: number | null;
+  axisSummary: {
+    roll: AxisStats;
+    pitch: AxisStats;
+    yaw: AxisStats;
+  };
+  suggestionLabel?: string;
+}
+
+export function buildSavedAnalysis(
+  result: BlackboxResult,
+  fileName: string,
+  buildProfileName: string | undefined,
+  suggestionLabel: string | undefined
+): SavedAnalysis {
+  return {
+    id: `${Date.now()}`,
+    fileName,
+    createdAt: new Date().toISOString(),
+    buildProfileName,
+    sampleCount: result.sampleCount,
+    durationSeconds: result.durationSeconds,
+    motorSaturationPercent: result.motorSaturationPercent,
+    batterySagPercent: result.battery?.sagPercent ?? null,
+    axisSummary: result.axisStats,
+    suggestionLabel,
+  };
+}
+
 export function parseBlackboxCsv(text: string): BlackboxResult {
   const warnings: string[] = [];
   const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);

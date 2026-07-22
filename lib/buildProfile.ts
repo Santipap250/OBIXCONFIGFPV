@@ -50,8 +50,10 @@ export const emptyBuildProfileInput: BuildProfileInput = {
 };
 
 export const flyingStyleLabels: Record<FlyingStyle, string> = {
+  beginner: "Beginner",
   freestyle: "Freestyle",
   cinematic: "Cinematic",
+  racing: "Racing",
   longrange: "Long range",
   micro: "Micro",
 };

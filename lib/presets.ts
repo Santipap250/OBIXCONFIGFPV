@@ -17,8 +17,10 @@ export interface StarterPreset {
 // applyRatesCurve engines used in the PID Advisor and Rates Visualizer
 // tools, so a preset here is never a separate, disconnected set of numbers.
 export const starterPresets: StarterPreset[] = [
+  { id: "beginner-5in", style: "beginner", label: "Beginner 5\"", propSizeInches: 5, motorKv: 1500, cells: 4, rcRate: 0.6, superRate: 0.3, expo: 0.55 },
   { id: "freestyle-5in", style: "freestyle", label: "Freestyle 5\"", propSizeInches: 5, motorKv: 1700, cells: 4, rcRate: 1.0, superRate: 0.7, expo: 0.3 },
   { id: "cinematic-5in", style: "cinematic", label: "Cinematic 5\"", propSizeInches: 5, motorKv: 1600, cells: 4, rcRate: 0.8, superRate: 0.5, expo: 0.4 },
+  { id: "racing-5in", style: "racing", label: "Racing 5\"", propSizeInches: 5, motorKv: 2100, cells: 6, rcRate: 1.15, superRate: 0.85, expo: 0.15 },
   { id: "longrange-7in", style: "longrange", label: "Long range 7\"", propSizeInches: 7, motorKv: 1300, cells: 6, rcRate: 0.7, superRate: 0.4, expo: 0.35 },
   { id: "micro-3in", style: "micro", label: "Micro 3\"", propSizeInches: 3, motorKv: 2400, cells: 4, rcRate: 1.1, superRate: 0.75, expo: 0.25 },
 ];

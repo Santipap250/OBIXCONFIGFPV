@@ -2,19 +2,36 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { parseBlackboxCsv, derivePidSuggestion, type BlackboxResult } from "@/lib/blackboxAnalyzer";
+import { parseBlackboxCsv, derivePidSuggestion, buildSavedAnalysis, type BlackboxResult, type SavedAnalysis } from "@/lib/blackboxAnalyzer";
+import { useLocalStorage } from "@/lib/useLocalStorage";
+import { useBuildProfiles } from "@/lib/useBuildProfiles";
 import ActiveBuildBanner from "./ActiveBuildBanner";
+
+const STORAGE_KEY = "saved-blackbox-analyses-v1";
 
 const AXIS_LABELS = { roll: "Roll", pitch: "Pitch", yaw: "Yaw" } as const;
 
 export default function BlackboxAnalyzerTool() {
+  const { activeProfile } = useBuildProfiles();
   const [result, setResult] = useState<BlackboxResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [savedAnalyses, setSavedAnalyses] = useLocalStorage<SavedAnalysis[]>(STORAGE_KEY, []);
+  const [savedNotice, setSavedNotice] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const suggestion = useMemo(() => (result ? derivePidSuggestion(result) : null), [result]);
+
+  const handleSaveAnalysis = () => {
+    if (!result || !fileName) return;
+    const entry = buildSavedAnalysis(result, fileName, activeProfile?.name, suggestion?.label);
+    setSavedAnalyses([entry, ...savedAnalyses].slice(0, 10));
+    setSavedNotice(true);
+    setTimeout(() => setSavedNotice(false), 2000);
+  };
+
+  const handleDeleteAnalysis = (id: string) => setSavedAnalyses(savedAnalyses.filter((a) => a.id !== id));
 
   const handleFile = useCallback((file: File) => {
     setError(null);
@@ -92,6 +109,19 @@ export default function BlackboxAnalyzerTool() {
 
       {result && (
         <div className="mt-8 space-y-6">
+          <div className="flex items-center justify-between">
+            <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Results</span>
+            <div className="flex items-center gap-3">
+              {savedNotice && <span className="font-hud text-xs text-phosphor">Saved</span>}
+              <button
+                type="button"
+                onClick={handleSaveAnalysis}
+                className="font-hud rounded-md border border-line-strong px-4 py-2 text-xs uppercase tracking-[0.15em] text-phosphor hover:bg-phosphor hover:text-[#04140b]"
+              >
+                Save analysis
+              </button>
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-3 font-hud sm:grid-cols-4">
             <div className="rounded-lg border border-line px-3 py-3">
               <p className="text-[10px] uppercase tracking-[0.15em] text-phosphor-dim">Samples</p>
@@ -196,6 +226,47 @@ export default function BlackboxAnalyzerTool() {
               ))}
             </div>
           )}
+        </div>
+      )}
+      {savedAnalyses.length > 0 && (
+        <div className="mt-8 rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
+          <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">
+            Saved analyses ({savedAnalyses.length})
+          </span>
+          <ul className="mt-3 space-y-2">
+            {savedAnalyses.map((a) => (
+              <li key={a.id} className="rounded-lg border border-line px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-ink">
+                      {a.fileName}
+                      {a.buildProfileName && (
+                        <span className="font-hud ml-2 text-[10px] uppercase tracking-[0.15em] text-muted">
+                          · {a.buildProfileName}
+                        </span>
+                      )}
+                    </p>
+                    <p className="font-hud mt-1 text-[11px] text-muted">
+                      {a.durationSeconds !== null ? `${a.durationSeconds.toFixed(1)}s` : "—"} ·{" "}
+                      {a.motorSaturationPercent !== null ? `${a.motorSaturationPercent.toFixed(1)}% sat.` : "—"} ·{" "}
+                      {new Date(a.createdAt).toLocaleDateString("th-TH")}
+                    </p>
+                    {a.suggestionLabel && <p className="mt-1 text-xs text-muted">{a.suggestionLabel}</p>}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteAnalysis(a.id)}
+                    className="font-hud shrink-0 text-[11px] uppercase tracking-[0.15em] text-muted hover:text-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-muted">
+            บันทึกเฉพาะสรุปผล (ไม่ใช่ไฟล์ log ดิบ) ไว้ในเครื่องนี้เท่านั้น เก็บล่าสุด 10 รายการ
+          </p>
         </div>
       )}
     </div>

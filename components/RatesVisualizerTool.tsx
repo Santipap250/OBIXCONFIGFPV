@@ -64,6 +64,19 @@ export default function RatesVisualizerTool() {
           )}
         </div>
 
+        <div className="mt-4 flex flex-wrap gap-2">
+          {starterPresets.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => setInputs({ rcRate: preset.rcRate, superRate: preset.superRate, expo: preset.expo })}
+              className="font-hud rounded-full border border-line px-3 py-1.5 text-[11px] text-muted hover:border-phosphor hover:text-phosphor"
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+
         <label className="mt-5 block text-sm text-muted">
           RC Rate: <span className="font-hud text-ink">{inputs.rcRate.toFixed(2)}</span>
           <input

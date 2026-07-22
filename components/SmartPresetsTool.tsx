@@ -18,6 +18,8 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
   const [importedNotice, setImportedNotice] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState<{ name: string; cliSnippet: string }>({ name: "", cliSnippet: "" });
 
   const active = starterPresets.find((p) => p.id === activeId) ?? starterPresets[0];
   const cli = buildPresetCli(active);
@@ -67,6 +69,34 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
   };
 
   const handleDelete = (id: string) => setSaved(saved.filter((p) => p.id !== id));
+
+  const handleDuplicate = (preset: SavedPreset) => {
+    const copy: SavedPreset = {
+      ...preset,
+      id: `${Date.now()}`,
+      name: `${preset.name} (copy)`,
+      createdAt: new Date().toISOString(),
+    };
+    setSaved([copy, ...saved].slice(0, 20));
+  };
+
+  const startEdit = (preset: SavedPreset) => {
+    setEditingId(preset.id);
+    setEditDraft({ name: preset.name, cliSnippet: preset.cliSnippet });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+  };
+
+  const saveEdit = (id: string) => {
+    setSaved(
+      saved.map((p) =>
+        p.id === id ? { ...p, name: editDraft.name.trim() || p.name, cliSnippet: editDraft.cliSnippet } : p
+      )
+    );
+    setEditingId(null);
+  };
 
   const handleImportShared = () => {
     if (!incomingShared) return;
@@ -206,34 +236,81 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
               <p className="mt-2 text-sm text-muted">ยังไม่มีพรีเซ็ตที่บันทึกไว้ในเครื่องนี้</p>
             ) : (
               <ul className="mt-2 space-y-2">
-                {saved.map((preset) => (
-                  <li key={preset.id} className="flex items-center justify-between rounded-lg border border-line px-3 py-2">
-                    <span className="text-sm text-ink">
-                      {preset.name}
-                      {preset.buildProfileName && (
-                        <span className="font-hud ml-2 text-[10px] uppercase tracking-[0.15em] text-muted">
-                          · {preset.buildProfileName}
-                        </span>
-                      )}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => navigator.clipboard.writeText(preset.cliSnippet).catch(() => {})}
-                        className="font-hud text-[11px] uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor"
-                      >
-                        Copy
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(preset.id)}
-                        className="font-hud text-[11px] uppercase tracking-[0.15em] text-muted hover:text-danger"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                {saved.map((preset) =>
+                  editingId === preset.id ? (
+                    <li key={preset.id} className="rounded-lg border border-phosphor/40 bg-phosphor/5 px-3 py-3">
+                      <input
+                        type="text"
+                        value={editDraft.name}
+                        onChange={(e) => setEditDraft((prev) => ({ ...prev, name: e.target.value }))}
+                        className="w-full rounded-md border border-line bg-transparent px-2 py-1.5 text-sm text-ink"
+                      />
+                      <textarea
+                        value={editDraft.cliSnippet}
+                        onChange={(e) => setEditDraft((prev) => ({ ...prev, cliSnippet: e.target.value }))}
+                        rows={6}
+                        className="font-hud mt-2 w-full rounded-md border border-line bg-[#04120b] px-2 py-1.5 text-xs text-phosphor"
+                      />
+                      <div className="mt-2 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => saveEdit(preset.id)}
+                          className="font-hud rounded-md border border-line-strong px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-phosphor hover:bg-phosphor hover:text-[#04140b]"
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={cancelEdit}
+                          className="font-hud rounded-md border border-line px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-muted"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </li>
+                  ) : (
+                    <li key={preset.id} className="flex items-center justify-between rounded-lg border border-line px-3 py-2">
+                      <span className="text-sm text-ink">
+                        {preset.name}
+                        {preset.buildProfileName && (
+                          <span className="font-hud ml-2 text-[10px] uppercase tracking-[0.15em] text-muted">
+                            · {preset.buildProfileName}
+                          </span>
+                        )}
+                      </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => navigator.clipboard.writeText(preset.cliSnippet).catch(() => {})}
+                          className="font-hud text-[11px] uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor"
+                        >
+                          Copy
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => startEdit(preset)}
+                          className="font-hud text-[11px] uppercase tracking-[0.15em] text-muted hover:text-ink"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDuplicate(preset)}
+                          className="font-hud text-[11px] uppercase tracking-[0.15em] text-muted hover:text-ink"
+                        >
+                          Duplicate
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(preset.id)}
+                          className="font-hud text-[11px] uppercase tracking-[0.15em] text-muted hover:text-danger"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  )
+                )}
               </ul>
             )}
           </div>

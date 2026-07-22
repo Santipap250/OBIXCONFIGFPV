@@ -7,8 +7,10 @@ import { useBuildProfiles } from "@/lib/useBuildProfiles";
 import ActiveBuildBanner from "./ActiveBuildBanner";
 
 const styles: { value: FlyingStyle; label: string }[] = [
+  { value: "beginner", label: "Beginner" },
   { value: "freestyle", label: "Freestyle" },
   { value: "cinematic", label: "Cinematic" },
+  { value: "racing", label: "Racing" },
   { value: "longrange", label: "Long range" },
   { value: "micro", label: "Micro" },
 ];

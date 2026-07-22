@@ -9,6 +9,7 @@ import { criticalItemIds, totalItems } from "@/lib/flightChecklist";
 import type { SavedPreset } from "@/lib/presets";
 import { calculatePid } from "@/lib/pidAdvisor";
 import BuildProfileManager from "./BuildProfileManager";
+import ToolIcon from "./icons/ToolIcon";
 
 export default function DashboardTool() {
   const { activeProfile } = useBuildProfiles();
@@ -45,9 +46,12 @@ export default function DashboardTool() {
         <BuildProfileManager />
 
         <div className="space-y-6">
-          <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
-            <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Flight Readiness</span>
-            <p className={`font-display mt-2 text-xl font-medium ${readinessLabel.color}`}>{readinessLabel.text}</p>
+          <div style={{ "--tool-color": "var(--tool-flight)" } as React.CSSProperties} className="tool-card hud-corners rounded-2xl border border-line-strong p-6">
+            <div className="flex items-center gap-3">
+              <ToolIcon tool="flight" size={30} />
+              <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Flight Readiness</span>
+            </div>
+            <p className={`font-display mt-3 text-xl font-medium ${readinessLabel.color}`}>{readinessLabel.text}</p>
             <p className="mt-1 text-sm text-muted">
               เช็คแล้ว {checkedCount}/{totalItems} ข้อ
               {uncheckedCritical.length > 0 && ` — เหลือข้อสำคัญ ${uncheckedCritical.length} ข้อ`}
@@ -60,9 +64,12 @@ export default function DashboardTool() {
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
-            <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Saved Presets</span>
-            <p className="font-display mt-2 text-xl font-medium text-ink">{savedPresets.length} รายการ</p>
+          <div style={{ "--tool-color": "var(--tool-presets)" } as React.CSSProperties} className="tool-card hud-corners rounded-2xl border border-line-strong p-6">
+            <div className="flex items-center gap-3">
+              <ToolIcon tool="presets" size={30} />
+              <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Saved Presets</span>
+            </div>
+            <p className="font-display mt-3 text-xl font-medium text-ink">{savedPresets.length} รายการ</p>
             {savedPresets.slice(0, 3).map((preset) => (
               <p key={preset.id} className="mt-1 text-sm text-muted">
                 {preset.name}
@@ -125,10 +132,14 @@ export default function DashboardTool() {
             <Link
               key={tool.slug}
               href={`/tools/${tool.slug}`}
-              className="rounded-lg border border-line px-4 py-3 hover:border-phosphor"
+              style={{ "--tool-color": `var(--tool-${tool.color})` } as React.CSSProperties}
+              className="tool-card hud-corners flex items-center gap-3 rounded-lg border border-line px-4 py-3"
             >
-              <p className="font-display text-sm font-medium text-ink">{tool.title}</p>
-              <p className="font-hud mt-1 text-[10px] uppercase tracking-[0.15em] text-muted">{statusLabel[tool.status]}</p>
+              <ToolIcon tool={tool.color} size={28} />
+              <div>
+                <p className="font-display text-sm font-medium text-ink">{tool.title}</p>
+                <p className="font-hud mt-0.5 text-[10px] uppercase tracking-[0.15em] text-muted">{statusLabel[tool.status]}</p>
+              </div>
             </Link>
           ))}
         </div>
@@ -142,8 +153,10 @@ export default function DashboardTool() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="font-hud rounded-full border border-line px-3 py-1.5 text-xs text-muted hover:border-phosphor hover:text-phosphor"
+                style={{ "--tool-color": `var(--tool-${tool.color})` } as React.CSSProperties}
+                className="font-hud flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-muted hover:border-[var(--tool-color)] hover:text-[var(--tool-color)]"
               >
+                <ToolIcon tool={tool.color} size={16} glow={false} />
                 {tool.title}
               </Link>
             ))}

@@ -49,10 +49,31 @@ export default function Hero() {
             <dd className="mt-1 text-lg normal-case tracking-normal text-ink">Pilots</dd>
           </div>
         </dl>
+
+        <div className="mt-6 flex items-center gap-2" aria-hidden="true">
+          {(["pid", "blackbox", "build", "rates", "flight", "presets"] as const).map((c) => (
+            <span
+              key={c}
+              className="h-2 w-6 rounded-full opacity-80"
+              style={{ background: `var(--tool-${c})` }}
+            />
+          ))}
+          <span className="font-hud ml-2 text-[10px] uppercase tracking-[0.2em] text-muted">6 instruments</span>
+        </div>
       </Reveal>
 
       <Reveal delay={120}>
-        <HudPanel />
+        <div className="relative">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-10 -z-10 rounded-full opacity-40 blur-3xl"
+            style={{
+              background:
+                "radial-gradient(closest-side, var(--phosphor), transparent), radial-gradient(closest-side at 70% 80%, var(--tool-blackbox), transparent)",
+            }}
+          />
+          <HudPanel />
+        </div>
       </Reveal>
     </section>
   );

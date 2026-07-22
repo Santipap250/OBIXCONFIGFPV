@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Reveal from "./Reveal";
+import ToolIcon from "./icons/ToolIcon";
 import { tools, statusLabel } from "@/lib/tools";
 
 export default function ToolsSection() {
@@ -22,45 +23,64 @@ export default function ToolsSection() {
         </p>
       </Reveal>
 
-      <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool, i) => (
-          <Reveal key={tool.slug} delay={i * 40}>
-            <button
-              type="button"
-              onClick={() => setActiveSlug(tool.slug)}
-              aria-pressed={activeSlug === tool.slug}
-              className={`w-full rounded-xl border px-4 py-4 text-left transition-colors ${
-                activeSlug === tool.slug
-                  ? "border-phosphor bg-phosphor/10"
-                  : "border-line hover:border-line-strong"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-hud text-xs tracking-[0.15em] text-phosphor-dim">{tool.badge}</span>
-                <span className="font-hud text-[10px] uppercase tracking-[0.15em] text-muted">
-                  {statusLabel[tool.status]}
-                </span>
-              </div>
-              <h3 className="font-display mt-2 text-lg font-medium text-ink">{tool.title}</h3>
-              <p className="mt-1 text-sm text-muted">{tool.short}</p>
-            </button>
-          </Reveal>
-        ))}
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {tools.map((tool, i) => {
+          const isActive = activeSlug === tool.slug;
+          return (
+            <Reveal key={tool.slug} delay={i * 40}>
+              <button
+                type="button"
+                onClick={() => setActiveSlug(tool.slug)}
+                aria-pressed={isActive}
+                style={{ "--tool-color": `var(--tool-${tool.color})` } as React.CSSProperties}
+                className={`tool-card hud-corners group w-full rounded-xl border p-5 text-left ${
+                  isActive ? "border-[var(--tool-color)]" : "border-line"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <ToolIcon tool={tool.color} size={40} />
+                  <span
+                    className={`font-hud shrink-0 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.15em] ${
+                      tool.status === "live"
+                        ? "border-[var(--tool-color)] text-[var(--tool-color)]"
+                        : "border-line text-muted"
+                    }`}
+                  >
+                    {statusLabel[tool.status]}
+                  </span>
+                </div>
+
+                <h3 className="font-display mt-4 text-lg font-medium text-ink">{tool.title}</h3>
+                <p className="mt-1 text-sm text-muted">{tool.short}</p>
+
+                <div className="mt-4 flex items-center gap-2 font-hud text-[11px] uppercase tracking-[0.15em] text-[var(--tool-color)] opacity-0 transition-opacity group-hover:opacity-100">
+                  {isActive ? "Viewing below ↓" : "Preview instrument →"}
+                </div>
+              </button>
+            </Reveal>
+          );
+        })}
       </div>
 
       <Reveal>
-        <div className="mt-8 rounded-2xl border border-line-strong bg-bg-panel/70 p-6 md:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">
-                {active.badge} · {statusLabel[active.status]}
-              </span>
-              <h3 className="font-display mt-2 text-2xl font-semibold text-ink">{active.title}</h3>
-              <p className="mt-2 max-w-xl text-muted">{active.description}</p>
+        <div
+          style={{ "--tool-color": `var(--tool-${active.color})` } as React.CSSProperties}
+          className="mt-8 overflow-hidden rounded-2xl border border-[var(--tool-color)]/50 bg-bg-panel/70 p-6 md:p-8"
+        >
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <ToolIcon tool={active.color} size={52} />
+              <div>
+                <span className="font-hud text-xs uppercase tracking-[0.15em] text-[var(--tool-color)]">
+                  {active.badge} · {statusLabel[active.status]}
+                </span>
+                <h3 className="font-display mt-1 text-2xl font-semibold text-ink">{active.title}</h3>
+                <p className="mt-2 max-w-xl text-muted">{active.description}</p>
+              </div>
             </div>
             <Link
               href={`/tools/${active.slug}`}
-              className="font-hud shrink-0 rounded-md border border-line-strong px-4 py-2 text-xs uppercase tracking-[0.15em] text-phosphor transition-colors hover:bg-phosphor hover:text-[#04140b]"
+              className="font-hud shrink-0 rounded-md border border-[var(--tool-color)] px-4 py-2 text-xs uppercase tracking-[0.15em] text-[var(--tool-color)] transition-colors hover:bg-[var(--tool-color)] hover:text-[#04140b]"
             >
               Open tool page →
             </Link>

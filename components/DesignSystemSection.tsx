@@ -40,14 +40,25 @@ export default function DesignSystemSection() {
               OBIXCONFIG FPV should feel like a cockpit, not a dashboard
             </h3>
             <p className="mt-2 text-sm text-muted">
-              High-contrast phosphor green on near-black, monospace telemetry, and
-              a single amber accent reserved for anything that needs attention.
+              High-contrast phosphor green stays the signature core — nav, CTAs,
+              telemetry. Each of the six tools carries its own instrument color
+              so the toolkit reads as one brand with six unmistakable dials.
             </p>
             <div className="mt-4 flex flex-wrap gap-2 font-hud text-[11px] text-muted">
-              {["dark first", "phosphor accent", "OSD grid", "hairline borders", "one amber signal"].map((tag) => (
+              {["dark first", "phosphor core", "6 instrument colors", "OSD grid", "hairline borders"].map((tag) => (
                 <span key={tag} className="rounded-full border border-line px-3 py-1">
                   {tag}
                 </span>
+              ))}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["pid", "blackbox", "build", "rates", "flight", "presets"] as const).map((c) => (
+                <span
+                  key={c}
+                  className="h-6 w-6 rounded-full border border-line-strong"
+                  style={{ background: `var(--tool-${c})` }}
+                  aria-hidden="true"
+                />
               ))}
             </div>
           </div>

@@ -12,6 +12,7 @@ import BuildHelperTool from "@/components/BuildHelperTool";
 import FlightReadinessTool from "@/components/FlightReadinessTool";
 import SmartPresetsWithParams from "@/components/SmartPresetsWithParams";
 import BlackboxAnalyzerTool from "@/components/BlackboxAnalyzerTool";
+import RecentToolTracker from "@/components/RecentToolTracker";
 
 // Tools with a real, working implementation. Anything not listed here still
 // gets an honest "in development" notice instead of a fake calculator.
@@ -55,6 +56,7 @@ export default async function ToolPage({
 
   return (
     <>
+      <RecentToolTracker slug={tool.slug} />
       <SiteHeader />
       <main className="container-hud py-14">
         <Link href="/#tools" className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor">

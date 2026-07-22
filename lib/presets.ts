@@ -28,6 +28,7 @@ export interface SavedPreset {
   name: string;
   createdAt: string;
   cliSnippet: string;
+  buildProfileName?: string;
 }
 
 export function buildPresetCli(preset: StarterPreset): string {

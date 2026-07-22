@@ -11,11 +11,14 @@ export interface BuildProfile {
   batteryCells?: number;
   batteryCapacityMah?: number;
   esc?: string;
+  escAmpRating?: number;
   fc?: string;
   firmware?: string;
   receiver?: string;
   vtx?: string;
   camera?: string;
+  motorMaxAmp?: number;
+  auwGrams?: number;
   flyingStyle?: FlyingStyle;
   notes?: string;
   createdAt: string;
@@ -34,11 +37,14 @@ export const emptyBuildProfileInput: BuildProfileInput = {
   batteryCells: 4,
   batteryCapacityMah: 1300,
   esc: "",
+  escAmpRating: 45,
   fc: "",
   firmware: "",
   receiver: "",
   vtx: "",
   camera: "",
+  motorMaxAmp: 38,
+  auwGrams: 650,
   flyingStyle: "freestyle",
   notes: "",
 };

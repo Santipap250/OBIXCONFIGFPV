@@ -22,6 +22,16 @@ const jetbrainsMono = localFont({
   display: "swap",
 });
 
+// Inter / Space Grotesk / JetBrains Mono don't include Thai glyphs — without
+// this, Thai text (most of this site's copy) silently falls back to
+// whatever Thai font the visitor's OS happens to default to, breaking the
+// typography system for the majority of the actual content.
+const notoSansThai = localFont({
+  src: "./fonts/NotoSansThai.ttf",
+  variable: "--font-thai",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -75,7 +85,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    <html lang="th" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${notoSansThai.variable}`}>
       <body>
         {children}
         <BottomNav />

@@ -39,9 +39,9 @@
   --color-tool-rates: var(--tool-rates);
   --color-tool-flight: var(--tool-flight);
   --color-tool-presets: var(--tool-presets);
-  --font-mono-hud: var(--font-jetbrains-mono);
-  --font-display: var(--font-space-grotesk);
-  --font-body: var(--font-inter);
+  --font-mono-hud: var(--font-jetbrains-mono), var(--font-thai);
+  --font-display: var(--font-space-grotesk), var(--font-thai);
+  --font-body: var(--font-inter), var(--font-thai);
 }
 
 * {

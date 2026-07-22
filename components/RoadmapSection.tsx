@@ -40,17 +40,30 @@ export default function RoadmapSection() {
       <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {phases.map((item, i) => (
           <Reveal key={item.phase} delay={i * 60}>
-            <article className="h-full rounded-xl border border-line px-5 py-6">
+            <article
+              style={{ "--tool-color": "var(--phosphor)" } as React.CSSProperties}
+              className={`tool-card hud-corners h-full rounded-xl border px-5 py-6 ${
+                item.done ? "border-phosphor/50" : "border-line"
+              }`}
+            >
               <div className="flex items-center justify-between">
                 <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">{item.phase}</span>
-                {item.done && (
-                  <span className="font-hud rounded-full bg-phosphor/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.15em] text-phosphor">
-                    Shipped
-                  </span>
-                )}
+                <span
+                  className={`font-hud flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${
+                    item.done ? "bg-phosphor text-[#04140b]" : "border border-line text-muted"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {item.done ? "✓" : i + 1}
+                </span>
               </div>
               <h3 className="font-display mt-2 text-lg font-medium text-ink">{item.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{item.copy}</p>
+              {item.done && (
+                <span className="font-hud mt-3 inline-block rounded-full bg-phosphor/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.15em] text-phosphor">
+                  Shipped
+                </span>
+              )}
             </article>
           </Reveal>
         ))}

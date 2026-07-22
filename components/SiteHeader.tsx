@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard" },
@@ -18,12 +19,15 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-line/60 bg-bg/85 backdrop-blur-md">
       <div className="container-hud flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-3" aria-label="OBIXCONFIG FPV, home">
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-md border border-line-strong text-phosphor">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="12" cy="12" r="8" />
-              <circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none" />
-              <path d="M12 4v2M12 18v2M4 12h2M18 12h2" strokeLinecap="round" />
-            </svg>
+          <span className="relative flex h-9 w-9 items-center justify-center">
+            <Image
+              src="/brand/obix-symbol.png"
+              alt="OBIXCONFIG FPV"
+              width={72}
+              height={72}
+              priority
+              className="h-9 w-9 object-contain"
+            />
           </span>
           <span className="font-display leading-tight">
             <span className="block text-sm font-semibold tracking-wide text-ink">OBIXCONFIG FPV</span>

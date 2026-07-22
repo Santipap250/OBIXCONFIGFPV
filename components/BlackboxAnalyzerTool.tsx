@@ -92,7 +92,14 @@ export default function BlackboxAnalyzerTool() {
         >
           เลือกไฟล์ .csv
         </button>
-        <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={onInputChange} className="hidden" />
+        <input
+          ref={inputRef}
+          type="file"
+          accept=".csv,text/csv"
+          onChange={onInputChange}
+          className="hidden"
+          aria-label="เลือกไฟล์ .csv สำหรับวิเคราะห์ Blackbox"
+        />
         {fileName && <p className="font-hud mt-3 text-xs text-muted">ไฟล์: {fileName}</p>}
         <p className="mt-4 text-xs text-muted">
           ไฟล์ถูกวิเคราะห์ในเบราว์เซอร์ของคุณเท่านั้น ไม่มีการอัปโหลดขึ้น server

@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { exportAllData, importAllData, clearAllData } from "@/lib/storage";
 import type { SavedPreset } from "@/lib/presets";
-import ToolIcon from "./icons/ToolIcon";
 
 export default function SettingsTool() {
   const [checklist] = useLocalStorage<Record<string, boolean>>("flight-readiness-v1", {});
@@ -58,30 +57,18 @@ export default function SettingsTool() {
 
   return (
     <div className="mt-10 space-y-6">
-      <div className="tool-card hud-corners rounded-2xl border border-line-strong p-6">
+      <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
         <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">
           ข้อมูลที่เก็บไว้ในเครื่องนี้
         </span>
         <div className="mt-4 grid grid-cols-2 gap-3 font-hud text-sm">
-          <div
-            style={{ "--tool-color": "var(--tool-flight)" } as React.CSSProperties}
-            className="flex items-center gap-3 rounded-lg border border-line px-4 py-3"
-          >
-            <ToolIcon tool="flight" size={26} />
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.15em] text-muted">Flight checklist</p>
-              <p className="mt-1 text-lg text-ink">{checklistCheckedCount} ข้อที่เช็คไว้</p>
-            </div>
+          <div className="rounded-lg border border-line px-4 py-3">
+            <p className="text-[10px] uppercase tracking-[0.15em] text-muted">Flight checklist</p>
+            <p className="mt-1 text-lg text-ink">{checklistCheckedCount} ข้อที่เช็คไว้</p>
           </div>
-          <div
-            style={{ "--tool-color": "var(--tool-presets)" } as React.CSSProperties}
-            className="flex items-center gap-3 rounded-lg border border-line px-4 py-3"
-          >
-            <ToolIcon tool="presets" size={26} />
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.15em] text-muted">Saved presets</p>
-              <p className="mt-1 text-lg text-ink">{savedPresets.length} รายการ</p>
-            </div>
+          <div className="rounded-lg border border-line px-4 py-3">
+            <p className="text-[10px] uppercase tracking-[0.15em] text-muted">Saved presets</p>
+            <p className="mt-1 text-lg text-ink">{savedPresets.length} รายการ</p>
           </div>
         </div>
         <p className="mt-4 text-xs text-muted">
@@ -90,7 +77,7 @@ export default function SettingsTool() {
         </p>
       </div>
 
-      <div className="tool-card hud-corners rounded-2xl border border-line-strong p-6">
+      <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
         <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">สำรอง / ย้ายข้อมูล</span>
         <div className="mt-4 flex flex-wrap gap-3">
           <button
@@ -107,14 +94,18 @@ export default function SettingsTool() {
           >
             Import จากไฟล์ .json
           </button>
-          <input ref={fileInputRef} type="file" accept=".json,application/json" onChange={handleImportFile} className="hidden" />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,application/json"
+            onChange={handleImportFile}
+            className="hidden"
+            aria-label="เลือกไฟล์ .json เพื่อนำเข้าข้อมูล"
+          />
         </div>
       </div>
 
-      <div
-        style={{ "--tool-color": "var(--danger)" } as React.CSSProperties}
-        className="tool-card hud-corners rounded-2xl border border-danger/40 bg-danger/5 p-6"
-      >
+      <div className="rounded-2xl border border-danger/40 bg-danger/5 p-6">
         <span className="font-hud text-xs uppercase tracking-[0.15em] text-danger">ล้างข้อมูลทั้งหมด</span>
         <p className="mt-2 text-sm text-muted">
           ลบเช็คลิสต์และพรีเซ็ตที่บันทึกไว้ในเครื่องนี้ทั้งหมด แนะนำให้ export สำรองไว้ก่อน — กู้คืนไม่ได้หลังลบ

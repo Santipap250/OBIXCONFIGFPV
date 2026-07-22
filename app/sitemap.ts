@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const staticRoutes: MetadataRoute.Sitemap = ["about", "roadmap", "faq", "download", "settings"].map((path) => ({
+  const staticRoutes: MetadataRoute.Sitemap = ["dashboard", "about", "roadmap", "faq", "download", "settings"].map((path) => ({
     url: `${siteUrl}/${path}`,
     changeFrequency: "monthly",
     priority: 0.5,

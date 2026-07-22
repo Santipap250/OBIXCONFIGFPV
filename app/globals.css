@@ -61,6 +61,12 @@ body {
   overflow-x: hidden;
 }
 
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(58px + env(safe-area-inset-bottom));
+  }
+}
+
 a {
   color: inherit;
 }

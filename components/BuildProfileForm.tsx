@@ -103,6 +103,33 @@ export default function BuildProfileForm({
             className="mt-1 w-full rounded-md border border-line bg-transparent px-3 py-2 text-sm text-ink"
           />
         </label>
+        <label className="block text-sm text-muted">
+          ESC continuous (A)
+          <input
+            type="number"
+            value={form.escAmpRating ?? ""}
+            onChange={(e) => setField("escAmpRating", Number(e.target.value))}
+            className="mt-1 w-full rounded-md border border-line bg-transparent px-3 py-2 text-sm text-ink"
+          />
+        </label>
+        <label className="block text-sm text-muted">
+          มอเตอร์ continuous max (A)
+          <input
+            type="number"
+            value={form.motorMaxAmp ?? ""}
+            onChange={(e) => setField("motorMaxAmp", Number(e.target.value))}
+            className="mt-1 w-full rounded-md border border-line bg-transparent px-3 py-2 text-sm text-ink"
+          />
+        </label>
+        <label className="block text-sm text-muted">
+          น้ำหนักรวม AUW (กรัม)
+          <input
+            type="number"
+            value={form.auwGrams ?? ""}
+            onChange={(e) => setField("auwGrams", Number(e.target.value))}
+            className="mt-1 w-full rounded-md border border-line bg-transparent px-3 py-2 text-sm text-ink"
+          />
+        </label>
         <label className="block text-sm text-muted sm:col-span-2">
           สไตล์การบิน
           <select

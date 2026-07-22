@@ -2,10 +2,39 @@
 
 import { checklist, criticalItemIds, totalItems } from "@/lib/flightChecklist";
 import { useLocalStorage } from "@/lib/useLocalStorage";
+import { useBuildProfiles } from "@/lib/useBuildProfiles";
+import ActiveBuildBanner from "./ActiveBuildBanner";
+import type { BuildProfile } from "@/lib/buildProfile";
 
 const STORAGE_KEY = "flight-readiness-v1";
 
+// Maps a checklist item to the matching Active Build field, so the safety
+// item shows the pilot's real equipment instead of a generic reminder.
+function equipmentHint(itemId: string, profile: BuildProfile | null): string | null {
+  if (!profile) return null;
+  switch (itemId) {
+    case "props-tight":
+    case "props-orientation":
+    case "props-damage":
+      return profile.propeller ? `ใบพัด: ${profile.propeller}` : null;
+    case "battery-voltage":
+    case "battery-secure":
+    case "battery-connector":
+      return profile.batteryCells ? `แบต: ${profile.batteryCells}S${profile.batteryCapacityMah ? ` ${profile.batteryCapacityMah}mAh` : ""}` : null;
+    case "vtx-power":
+    case "vtx-channel":
+      return profile.vtx ? `VTX: ${profile.vtx}` : null;
+    case "rx-bind":
+      return profile.receiver ? `Receiver: ${profile.receiver}` : null;
+    case "frame-screws":
+      return profile.frame ? `เฟรม: ${profile.frame}` : null;
+    default:
+      return null;
+  }
+}
+
 export default function FlightReadinessTool() {
+  const { activeProfile } = useBuildProfiles();
   const [checked, setChecked] = useLocalStorage<Record<string, boolean>>(STORAGE_KEY, {});
 
   const checkedCount = Object.values(checked).filter(Boolean).length;
@@ -17,6 +46,7 @@ export default function FlightReadinessTool() {
 
   return (
     <div className="mt-10">
+      <ActiveBuildBanner />
       <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -77,6 +107,11 @@ export default function FlightReadinessTool() {
                           สำคัญ
                         </span>
                       )}
+                      {equipmentHint(item.id, activeProfile) && (
+                        <span className="font-hud ml-2 text-[10px] uppercase tracking-[0.15em] text-phosphor-dim">
+                          {equipmentHint(item.id, activeProfile)}
+                        </span>
+                      )}
                     </span>
                   </label>
                 </li>
@@ -89,6 +124,7 @@ export default function FlightReadinessTool() {
       <p className="mt-6 text-xs text-muted">
         สถานะเช็คลิสต์บันทึกไว้ในเครื่องนี้เท่านั้น (localStorage) กด &quot;เริ่มเช็คลิสต์ใหม่&quot;
         ก่อนบินทุกครั้งที่เป็นเที่ยวบินใหม่ — ยังไม่ sync ข้ามอุปกรณ์จนกว่าจะมีระบบบัญชีผู้ใช้
+        {activeProfile && " ป้ายอุปกรณ์ข้างแต่ละข้อดึงมาจาก Active Build จริง ไม่ใช่ค่าคงที่"}
       </p>
     </div>
   );

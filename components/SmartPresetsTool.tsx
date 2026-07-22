@@ -4,10 +4,13 @@ import { useState } from "react";
 import { starterPresets, buildPresetCli, type SavedPreset } from "@/lib/presets";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { encodeSharedPreset, type SharedPresetPayload } from "@/lib/shareEncoding";
+import { useBuildProfiles } from "@/lib/useBuildProfiles";
+import ActiveBuildBanner from "./ActiveBuildBanner";
 
 const STORAGE_KEY = "saved-presets-v1";
 
 export default function SmartPresetsTool({ incomingShared }: { incomingShared?: SharedPresetPayload }) {
+  const { activeProfile } = useBuildProfiles();
   const [activeId, setActiveId] = useState(starterPresets[0].id);
   const [saved, setSaved] = useLocalStorage<SavedPreset[]>(STORAGE_KEY, []);
   const [copied, setCopied] = useState(false);
@@ -18,6 +21,10 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
 
   const active = starterPresets.find((p) => p.id === activeId) ?? starterPresets[0];
   const cli = buildPresetCli(active);
+
+  const suggestedForBuild = activeProfile?.flyingStyle
+    ? starterPresets.find((p) => p.style === activeProfile.flyingStyle)
+    : undefined;
 
   const handleShare = () => {
     const encoded = encodeSharedPreset({ name: nameDraft.trim() || active.label, cliSnippet: cli, style: active.style });
@@ -53,6 +60,7 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
       name,
       createdAt: new Date().toISOString(),
       cliSnippet: cli,
+      buildProfileName: activeProfile?.name,
     };
     setSaved([entry, ...saved].slice(0, 20));
     setNameDraft("");
@@ -75,6 +83,7 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
 
   return (
     <div className="mt-10 space-y-6">
+      <ActiveBuildBanner />
       {incomingShared && (
         <div className="rounded-2xl border border-phosphor/40 bg-phosphor/5 p-6">
           <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">
@@ -100,7 +109,18 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
         <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
-          <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Starter presets</span>
+          <div className="flex items-center justify-between">
+            <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Starter presets</span>
+            {suggestedForBuild && (
+              <button
+                type="button"
+                onClick={() => setActiveId(suggestedForBuild.id)}
+                className="font-hud text-[11px] uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor"
+              >
+                ใช้ที่แนะนำสำหรับ build นี้
+              </button>
+            )}
+          </div>
           <div className="mt-4 flex flex-col gap-2">
             {starterPresets.map((preset) => (
               <button
@@ -188,7 +208,14 @@ export default function SmartPresetsTool({ incomingShared }: { incomingShared?: 
               <ul className="mt-2 space-y-2">
                 {saved.map((preset) => (
                   <li key={preset.id} className="flex items-center justify-between rounded-lg border border-line px-3 py-2">
-                    <span className="text-sm text-ink">{preset.name}</span>
+                    <span className="text-sm text-ink">
+                      {preset.name}
+                      {preset.buildProfileName && (
+                        <span className="font-hud ml-2 text-[10px] uppercase tracking-[0.15em] text-muted">
+                          · {preset.buildProfileName}
+                        </span>
+                      )}
+                    </span>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"

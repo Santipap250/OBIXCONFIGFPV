@@ -2,12 +2,23 @@
 
 import { useMemo, useState } from "react";
 import { calculateBuild } from "@/lib/buildHelper";
+import { useBuildProfiles } from "@/lib/useBuildProfiles";
+import ActiveBuildBanner from "./ActiveBuildBanner";
 
 export default function BuildHelperTool() {
+  const { activeProfile } = useBuildProfiles();
   const [auwGrams, setAuwGrams] = useState(650);
   const [cells, setCells] = useState(4);
   const [escAmpRating, setEscAmpRating] = useState(45);
   const [motorMaxAmp, setMotorMaxAmp] = useState(38);
+
+  const loadFromActiveBuild = () => {
+    if (!activeProfile) return;
+    if (activeProfile.auwGrams) setAuwGrams(activeProfile.auwGrams);
+    if (activeProfile.batteryCells) setCells(activeProfile.batteryCells);
+    if (activeProfile.escAmpRating) setEscAmpRating(activeProfile.escAmpRating);
+    if (activeProfile.motorMaxAmp) setMotorMaxAmp(activeProfile.motorMaxAmp);
+  };
 
   const result = useMemo(
     () => calculateBuild({ auwGrams, cells, escAmpRating, motorMaxAmp, motorCount: 4 }),
@@ -18,9 +29,22 @@ export default function BuildHelperTool() {
     result.powerClass === "freestyle" ? "text-phosphor" : result.powerClass === "all-round" ? "text-amber" : "text-ink";
 
   return (
+    <>
+      <ActiveBuildBanner />
     <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
       <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
-        <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Build inputs</span>
+        <div className="flex items-center justify-between">
+          <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Build inputs</span>
+          {activeProfile && (
+            <button
+              type="button"
+              onClick={loadFromActiveBuild}
+              className="font-hud text-[11px] uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor"
+            >
+              โหลดจาก Active Build
+            </button>
+          )}
+        </div>
 
         <label className="mt-5 block text-sm text-muted">
           น้ำหนักรวม AUW (กรัม): <span className="font-hud text-ink">{auwGrams}g</span>
@@ -132,5 +156,6 @@ export default function BuildHelperTool() {
         </p>
       </div>
     </div>
+    </>
   );
 }

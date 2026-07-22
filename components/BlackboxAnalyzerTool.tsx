@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { parseBlackboxCsv, derivePidSuggestion, type BlackboxResult } from "@/lib/blackboxAnalyzer";
+import ActiveBuildBanner from "./ActiveBuildBanner";
 
 const AXIS_LABELS = { roll: "Roll", pitch: "Pitch", yaw: "Yaw" } as const;
 
@@ -53,6 +54,7 @@ export default function BlackboxAnalyzerTool() {
 
   return (
     <div className="mt-10">
+      <ActiveBuildBanner />
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={onDrop}

@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { buildRatesCurve, peakRate, type RatesInputs } from "@/lib/ratesEngine";
+import { useBuildProfiles } from "@/lib/useBuildProfiles";
+import { starterPresets } from "@/lib/presets";
+import ActiveBuildBanner from "./ActiveBuildBanner";
 
 const VIEW_W = 560;
 const VIEW_H = 280;
@@ -23,8 +26,18 @@ function toPath(inputs: RatesInputs) {
 const defaultInputs: RatesInputs = { rcRate: 1.0, superRate: 0.7, expo: 0.3 };
 
 export default function RatesVisualizerTool() {
+  const { activeProfile } = useBuildProfiles();
   const [inputs, setInputs] = useState<RatesInputs>(defaultInputs);
   const [snapshot, setSnapshot] = useState<RatesInputs | null>(null);
+
+  const suggestedPreset = activeProfile?.flyingStyle
+    ? starterPresets.find((p) => p.style === activeProfile.flyingStyle)
+    : undefined;
+
+  const loadSuggested = () => {
+    if (!suggestedPreset) return;
+    setInputs({ rcRate: suggestedPreset.rcRate, superRate: suggestedPreset.superRate, expo: suggestedPreset.expo });
+  };
 
   const path = useMemo(() => toPath(inputs), [inputs]);
   const snapshotPath = useMemo(() => (snapshot ? toPath(snapshot) : null), [snapshot]);
@@ -34,9 +47,22 @@ export default function RatesVisualizerTool() {
     setInputs((prev) => ({ ...prev, [key]: Number(e.target.value) }));
 
   return (
-    <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+    <>
+      <ActiveBuildBanner />
+      <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
       <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
-        <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Rates</span>
+        <div className="flex items-center justify-between">
+          <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">Rates</span>
+          {suggestedPreset && (
+            <button
+              type="button"
+              onClick={loadSuggested}
+              className="font-hud text-[11px] uppercase tracking-[0.15em] text-phosphor-dim hover:text-phosphor"
+            >
+              โหลด rates สำหรับ {activeProfile?.flyingStyle}
+            </button>
+          )}
+        </div>
 
         <label className="mt-5 block text-sm text-muted">
           RC Rate: <span className="font-hud text-ink">{inputs.rcRate.toFixed(2)}</span>
@@ -139,5 +165,6 @@ export default function RatesVisualizerTool() {
         </p>
       </div>
     </div>
+    </>
   );
 }

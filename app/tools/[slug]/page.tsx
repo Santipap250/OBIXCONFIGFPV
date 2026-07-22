@@ -13,6 +13,7 @@ import FlightReadinessTool from "@/components/FlightReadinessTool";
 import SmartPresetsWithParams from "@/components/SmartPresetsWithParams";
 import BlackboxAnalyzerTool from "@/components/BlackboxAnalyzerTool";
 import RecentToolTracker from "@/components/RecentToolTracker";
+import ToolIcon from "@/components/icons/ToolIcon";
 
 // Tools with a real, working implementation. Anything not listed here still
 // gets an honest "in development" notice instead of a fake calculator.
@@ -64,16 +65,24 @@ export default async function ToolPage({
         </Link>
 
         <Reveal>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span className="font-hud rounded-full border border-line-strong px-3 py-1 text-xs uppercase tracking-[0.15em] text-phosphor">
-              {tool.badge}
-            </span>
-            <span className="font-hud rounded-full border border-line px-3 py-1 text-xs uppercase tracking-[0.15em] text-muted">
-              {statusLabel[tool.status]}
-            </span>
+          <div
+            style={{ "--tool-color": `var(--tool-${tool.color})` } as React.CSSProperties}
+            className="flex flex-wrap items-start gap-4"
+          >
+            <ToolIcon tool={tool.color} size={56} className="mt-6 shrink-0" />
+            <div>
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <span className="font-hud rounded-full border border-[var(--tool-color)] px-3 py-1 text-xs uppercase tracking-[0.15em] text-[var(--tool-color)]">
+                  {tool.badge}
+                </span>
+                <span className="font-hud rounded-full border border-line px-3 py-1 text-xs uppercase tracking-[0.15em] text-muted">
+                  {statusLabel[tool.status]}
+                </span>
+              </div>
+              <h1 className="font-display mt-4 text-4xl font-semibold text-ink">{tool.title}</h1>
+              <p className="mt-3 max-w-xl text-lg text-muted">{tool.description}</p>
+            </div>
           </div>
-          <h1 className="font-display mt-4 text-4xl font-semibold text-ink">{tool.title}</h1>
-          <p className="mt-3 max-w-xl text-lg text-muted">{tool.description}</p>
         </Reveal>
 
         <Reveal delay={80}>
@@ -114,8 +123,10 @@ export default async function ToolPage({
                 <Link
                   key={t.slug}
                   href={`/tools/${t.slug}`}
-                  className="font-hud rounded-full border border-line px-4 py-2 text-xs uppercase tracking-[0.15em] text-muted transition-colors hover:border-phosphor hover:text-phosphor"
+                  style={{ "--tool-color": `var(--tool-${t.color})` } as React.CSSProperties}
+                  className="font-hud flex items-center gap-2 rounded-full border border-line px-3 py-2 text-xs uppercase tracking-[0.15em] text-muted transition-colors hover:border-[var(--tool-color)] hover:text-[var(--tool-color)]"
                 >
+                  <ToolIcon tool={t.color} size={18} glow={false} />
                   {t.title}
                 </Link>
               ))}

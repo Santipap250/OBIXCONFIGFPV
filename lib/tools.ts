@@ -38,11 +38,11 @@ export const tools: Tool[] = [
     short: "Read oscillation and noise from real logs",
     description: "ช่วยอ่านอาการสั่น แกว่ง และ noise จากข้อมูลจริงให้เข้าใจง่าย",
     status: "beta",
-    chips: ["อัปโหลด CSV ที่ decode แล้ว", "Tracking error + jitter ต่อแกน", "Motor saturation + battery sag"],
+    chips: ["อัปโหลด CSV ที่ decode แล้ว", "Noise spectrum (FFT) จริงต่อแกน", "Motor saturation + battery sag"],
     detail: [
       "อัปโหลดไฟล์ CSV ที่ decode แล้วจาก Blackbox Explorer หรือ blackbox_decode วิเคราะห์ในเบราว์เซอร์ทันที ไม่อัปโหลดขึ้น server",
-      "คำนวณ RMS tracking error, jitter ต่อแกน (roll/pitch/yaw), motor saturation และแรงดันแบตจากข้อมูลจริงในไฟล์",
-      "ยังไม่รองรับไฟล์ .bbl ดิบและยังไม่มี noise spectrum/step response แบบเต็มรูปแบบ — เชื่อมกับ PID Advisor เป็นเฟสถัดไป",
+      "คำนวณ RMS tracking error, noise spectrum จาก FFT จริงต่อแกน (roll/pitch/yaw), motor saturation และแรงดันแบตจากข้อมูลจริงในไฟล์",
+      "ยังไม่รองรับไฟล์ .bbl ดิบและยังไม่มี step response analysis — เชื่อมกับ PID Advisor เป็นเฟสถัดไป",
     ],
   },
   {

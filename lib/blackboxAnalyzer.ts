@@ -1,7 +1,30 @@
+import { computeSpectrum, type SpectrumResult } from "./fft";
+
 export interface AxisStats {
   rmsTrackingError: number | null;
   jitter: number | null;
+  spectrum: SpectrumResult | null;
 }
+
+export type NoiseBand = "low" | "mid" | "high" | "unknown";
+
+// Rough, widely-cited community bands (not exact science): low-frequency
+// content usually tracks frame flex/prop wash, mid-frequency tracks
+// motor/prop harmonics at typical FPV RPM, high-frequency is more often
+// electrical noise or an under-filtered gyro signal.
+export function categorizeNoiseBand(hz: number): NoiseBand {
+  if (hz <= 0) return "unknown";
+  if (hz < 20) return "low";
+  if (hz < 150) return "mid";
+  return "high";
+}
+
+export const noiseBandLabel: Record<NoiseBand, string> = {
+  low: "ความถี่ต่ำ (<20Hz) — มักเกี่ยวกับเฟรมแอ่น/prop wash",
+  mid: "ความถี่กลาง (20-150Hz) — มักเกี่ยวกับมอเตอร์/ใบพัด",
+  high: "ความถี่สูง (>150Hz) — มักเป็น electrical noise หรือ filter ไม่พอ",
+  unknown: "ไม่พบ noise เด่นชัด",
+};
 
 export interface BatteryStats {
   min: number;
@@ -96,6 +119,7 @@ export interface SavedAnalysis {
     pitch: AxisStats;
     yaw: AxisStats;
   };
+  noisePeaks?: { axis: "roll" | "pitch" | "yaw"; hz: number; band: NoiseBand }[];
   suggestionLabel?: string;
 }
 
@@ -105,6 +129,16 @@ export function buildSavedAnalysis(
   buildProfileName: string | undefined,
   suggestionLabel: string | undefined
 ): SavedAnalysis {
+  // Store only the peak frequency + band per axis, not the full spectrum
+  // array — this stays a lightweight summary, consistent with the rest of
+  // what gets saved here.
+  const noisePeaks: SavedAnalysis["noisePeaks"] = (["roll", "pitch", "yaw"] as const)
+    .filter((axis) => result.axisStats[axis].spectrum)
+    .map((axis) => {
+      const spectrum = result.axisStats[axis].spectrum!;
+      return { axis, hz: Math.round(spectrum.peakFrequencyHz), band: categorizeNoiseBand(spectrum.peakFrequencyHz) };
+    });
+
   return {
     id: `${Date.now()}`,
     fileName,
@@ -114,7 +148,12 @@ export function buildSavedAnalysis(
     durationSeconds: result.durationSeconds,
     motorSaturationPercent: result.motorSaturationPercent,
     batterySagPercent: result.battery?.sagPercent ?? null,
-    axisSummary: result.axisStats,
+    axisSummary: {
+      roll: { ...result.axisStats.roll, spectrum: null },
+      pitch: { ...result.axisStats.pitch, spectrum: null },
+      yaw: { ...result.axisStats.yaw, spectrum: null },
+    },
+    noisePeaks,
     suggestionLabel,
   };
 }
@@ -205,10 +244,20 @@ export function parseBlackboxCsv(text: string): BlackboxResult {
     }
   }
 
+  const durationSeconds =
+    firstTime !== null && lastTime !== null ? (lastTime - firstTime) / 1_000_000 : null;
+
+  // Effective sample rate of the *analyzed* series — must account for
+  // stride-sampling, or frequency labels on the spectrum would be wrong.
+  const effectiveSampleRateHz =
+    durationSeconds && durationSeconds > 0 && gyroSeries[0].length > 1
+      ? (gyroSeries[0].length - 1) / durationSeconds
+      : null;
+
   const axisStats = {
-    roll: computeAxisStats(gyroSeries[0], errorSeries[0]),
-    pitch: computeAxisStats(gyroSeries[1], errorSeries[1]),
-    yaw: computeAxisStats(gyroSeries[2], errorSeries[2]),
+    roll: computeAxisStats(gyroSeries[0], errorSeries[0], effectiveSampleRateHz),
+    pitch: computeAxisStats(gyroSeries[1], errorSeries[1], effectiveSampleRateHz),
+    yaw: computeAxisStats(gyroSeries[2], errorSeries[2], effectiveSampleRateHz),
   };
 
   let motorSaturationPercent: number | null = null;
@@ -237,9 +286,6 @@ export function parseBlackboxCsv(text: string): BlackboxResult {
     };
   }
 
-  const durationSeconds =
-    firstTime !== null && lastTime !== null ? (lastTime - firstTime) / 1_000_000 : null;
-
   return {
     sampleCount,
     analyzedSampleCount: gyroSeries[0].length || Math.ceil(sampleCount / stride),
@@ -253,12 +299,20 @@ export function parseBlackboxCsv(text: string): BlackboxResult {
   };
 }
 
-function computeAxisStats(gyro: number[], error: number[]): AxisStats {
-  if (gyro.length < 2) return { rmsTrackingError: null, jitter: null };
+function computeAxisStats(gyro: number[], error: number[], sampleRateHz: number | null): AxisStats {
+  if (gyro.length < 2) return { rmsTrackingError: null, jitter: null, spectrum: null };
   const diffs: number[] = [];
   for (let i = 1; i < gyro.length; i++) diffs.push(Math.abs(gyro[i] - gyro[i - 1]));
+
+  // Remove DC/mean offset before the FFT — a constant gyro bias would
+  // otherwise dominate the DC bin and isn't "noise".
+  const meanGyro = mean(gyro);
+  const centered = gyro.map((v) => v - meanGyro);
+  const spectrum = sampleRateHz ? computeSpectrum(centered, sampleRateHz) : null;
+
   return {
     rmsTrackingError: error.length > 0 ? rms(error) : null,
     jitter: mean(diffs),
+    spectrum,
   };
 }

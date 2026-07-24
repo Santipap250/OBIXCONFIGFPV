@@ -2,7 +2,15 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { parseBlackboxCsv, derivePidSuggestion, buildSavedAnalysis, type BlackboxResult, type SavedAnalysis } from "@/lib/blackboxAnalyzer";
+import {
+  parseBlackboxCsv,
+  derivePidSuggestion,
+  buildSavedAnalysis,
+  categorizeNoiseBand,
+  noiseBandLabel,
+  type BlackboxResult,
+  type SavedAnalysis,
+} from "@/lib/blackboxAnalyzer";
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { useBuildProfiles } from "@/lib/useBuildProfiles";
 import ActiveBuildBanner from "./ActiveBuildBanner";
@@ -10,6 +18,21 @@ import ActiveBuildBanner from "./ActiveBuildBanner";
 const STORAGE_KEY = "saved-blackbox-analyses-v1";
 
 const AXIS_LABELS = { roll: "Roll", pitch: "Pitch", yaw: "Yaw" } as const;
+
+function spectrumToPath(magnitudes: number[]): string {
+  if (magnitudes.length === 0) return "";
+  // Skip the DC bin (index 0) — a constant offset isn't noise and would
+  // otherwise dwarf everything else on the chart.
+  const usable = magnitudes.slice(1);
+  const max = Math.max(...usable, 1e-6);
+  return usable
+    .map((m, i) => {
+      const x = (i / (usable.length - 1)) * 200;
+      const y = 60 - (m / max) * 58;
+      return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
+}
 
 export default function BlackboxAnalyzerTool() {
   const { activeProfile } = useBuildProfiles();
@@ -178,7 +201,43 @@ export default function BlackboxAnalyzerTool() {
             </div>
             <p className="mt-4 text-xs text-muted">
               Tracking error = setpoint − gyro (ยิ่งต่ำยิ่งดี) · Jitter = ค่าเฉลี่ยความต่างระหว่างตัวอย่างติดกัน
-              (ประเมิน high-frequency noise แบบหยาบ ไม่ใช่ noise spectrum เต็มรูปแบบ)
+              (ตัวชี้วัดหยาบ ดู noise spectrum เต็มรูปแบบด้านล่างสำหรับรายละเอียดความถี่)
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-line-strong bg-bg-panel/70 p-6">
+            <span className="font-hud text-xs uppercase tracking-[0.15em] text-phosphor-dim">
+              Noise spectrum (FFT) ต่อแกน
+            </span>
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              {(["roll", "pitch", "yaw"] as const).map((axis) => {
+                const spectrum = result.axisStats[axis].spectrum;
+                if (!spectrum) {
+                  return (
+                    <div key={axis} className="rounded-lg border border-line px-4 py-3 text-sm text-muted">
+                      {AXIS_LABELS[axis]}: ข้อมูลไม่พอสำหรับวิเคราะห์ความถี่
+                    </div>
+                  );
+                }
+                const band = categorizeNoiseBand(spectrum.peakFrequencyHz);
+                const path = spectrumToPath(spectrum.magnitudes);
+                return (
+                  <div key={axis} className="rounded-lg border border-line px-4 py-3">
+                    <p className="font-display text-sm font-medium text-ink">{AXIS_LABELS[axis]}</p>
+                    <svg viewBox="0 0 200 60" className="mt-2 w-full" preserveAspectRatio="none">
+                      <path d={path} fill="none" stroke="var(--tool-blackbox)" strokeWidth="1.5" />
+                    </svg>
+                    <p className="font-hud mt-2 text-xs text-muted">Peak noise</p>
+                    <p className="font-hud text-lg text-amber">{Math.round(spectrum.peakFrequencyHz)} Hz</p>
+                    <p className="mt-1 text-[11px] text-muted">{noiseBandLabel[band]}</p>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="mt-4 text-xs text-muted">
+              คำนวณจาก FFT จริง (Hann window ก่อนแปลง) ไม่ใช่การประมาณ — แกน X คือความถี่ 0 ถึง Nyquist
+              ของ log นี้ แกน Y คือ amplitude สัมพัทธ์ การจัดกลุ่มความถี่เป็นแนวทางคร่าว ๆ จากความรู้ทั่วไปของชุมชน
+              FPV ไม่ใช่การวินิจฉัยที่แม่นยำ 100%
             </p>
           </div>
 

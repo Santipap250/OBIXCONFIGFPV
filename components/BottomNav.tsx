@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const items = [
   {
     href: "/dashboard",
-    label: "Dashboard",
+    label: "Home",
     icon: (
       <path d="M4 12l8-8 8 8M6 10v10h5v-6h2v6h5V10" strokeLinecap="round" strokeLinejoin="round" />
     ),
@@ -19,9 +19,7 @@ const items = [
   {
     href: "/tools/presets",
     label: "Presets",
-    icon: (
-      <path d="M4 6h16M4 12h10M4 18h13" strokeLinecap="round" />
-    ),
+    icon: <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />,
   },
   {
     href: "/tools/flight",
@@ -49,14 +47,14 @@ export default function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-bg/95 backdrop-blur-md md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-5 justify-items-center">
         {items.map((item) => {
           const isActive = item.href === "/#tools" ? false : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.1em] ${
+              className={`flex w-full flex-col items-center gap-1 whitespace-nowrap py-2.5 text-[10px] uppercase tracking-[0.1em] ${
                 isActive ? "text-phosphor" : "text-muted"
               }`}
             >
